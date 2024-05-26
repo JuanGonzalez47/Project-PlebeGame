@@ -2,18 +2,21 @@
 #define SPRITES_H
 
 
-#include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QString>
+#include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsItem>
+#include <QGraphicsView>
 
 using namespace std;
 
 
-class sprites : public QObject, public QGraphicsPixmapItem
+class sprite : public QObject, public QGraphicsPixmapItem
 {
 private:
 
-    QPixmap sprite;
+    QPixmap sprit;
     QPixmap spriteSheet;
     qreal x;
     qreal y;
@@ -21,13 +24,16 @@ private:
     int sprite_y;
     int sprite_width;
     int sprite_height;
+    int cont;
+
 
 public:
 
-    sprites(QString name_image, int spriteX_,int spriteY_,int spriteWidth_,  int spriteHeight_,qreal x_,qreal y_);
+    sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _x,qreal _y);
+    sprite(QGraphicsView *view,QGraphicsItem* im = 0);
 
     void moveImage(int dx, int dy);
-    void setSprite(int pixelx);
+    void setSprite(int n_image,int dir);
 
 };
 

@@ -1,27 +1,31 @@
 #include "sprites.h"
 
-sprites::sprites(QString name_image, int sprite_x_, int sprite_y_, int sprite_width_, int sprite_height_,qreal x_,qreal y_){
+sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _x,qreal _y){
 
 
     spriteSheet.load(name_image);
 
     //posicion inicial en la que se vera la imagen en la escena
-    x=x_;
-    y=y_;
+    x=_x;
+    y=_y;
 
     //posicion inicial en el sprite
-    sprite_x=sprite_x_;
-    sprite_y=sprite_y_;
+    sprite_x=_sprite_x;
+    sprite_y=_sprite_y;
     //dimensiones de cada imagen
-    sprite_width=sprite_width_;
-    sprite_height=sprite_height_;
+    sprite_width=_sprite_width;
+    sprite_height=_sprite_height;
 
-    sprite = spriteSheet.copy(sprite_x, sprite_y, sprite_width, sprite_height);
-    setPixmap(sprite);
+    sprit = spriteSheet.copy(sprite_x, sprite_y, sprite_width, sprite_height);
+    setPixmap(sprit);
 
 }
 
-void sprites::moveImage(int dx, int dy){
+sprite::sprite(QGraphicsView *view,QGraphicsItem *im):QGraphicsPixmapItem(im){
+
+}
+
+void sprite::moveImage(int dx, int dy){
 
     //move imagen por la escena
     x += dx;
@@ -29,7 +33,7 @@ void sprites::moveImage(int dx, int dy){
     setPos(x, y);
 }
 
-void sprites::setSprite(int n_image,int dir){
+void sprite::setSprite(int n_image,int dir){
 
     sprite_x = sprite_width * cont;//rotar por cada imagen
     sprite_y = dir;
