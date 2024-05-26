@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sprites.h"
-#include "characters.h"
 
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "sprite.h"
 #include <qdebug.h>
 #include <QLabel>
 #include <QPixmap>
@@ -14,57 +16,48 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QGraphicsScene *scene = new QGraphicsScene(this); // se debe crear una escena para manejar elementos gráficos
-    scene->setSceneRect(0,0, 800, 800);
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    scene->setSceneRect(0, 0, 1300, 800);
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->setFixedSize(1000+2  * ui->graphicsView->frameWidth(), 800+2 * ui->graphicsView->frameWidth());//manejar la relación de aspecto
-
-    sprite *move = new sprite(ui->graphicsView);
-    scene -> addItem(move);
-    move->setPos(45,45);//PREGUNTAR
+    ui->graphicsView->setFixedSize(1300 + 2 * ui->graphicsView->frameWidth(), 800 + 2 * ui->graphicsView->frameWidth());
+    scene->addItem(move);  // Agregar el sprite a la escena
+    move->setPos(200,200);
 }
 
-
+MainWindow::~MainWindow() {
+    delete ui;
+}
 
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
-
-    sprite move(":/dispa-mov-personaje.png",0,0,110,100,300,300);
-
     //Manejo del evento de tecla
     switch(event->key()) {
-        case Qt::Key_A:
+    case Qt::Key_A:
 
-            move.moveImage(-5,0);
-            move.setSprite(9,0);
+        juan->moveLeftCharacter(move);
 
-            break;
-        case Qt::Key_D:
+        break;
+    case Qt::Key_D:
 
-            move.moveImage(5,0);
-            move.setSprite(9,0);
+        juan->moveRightCharacter(move);
 
-            break;
-        case Qt::Key_W:
+        break;
+    case Qt::Key_W:
+        //qDebug() << "Tecla: " << event->key();
 
-            move.moveImage(0,5);
-            move.setSprite(9,0);
-            break;
-        case Qt::Key_S:
+        juan->moveUpCharacter(move);
 
-            move.moveImage(0,-5);
-            move.setSprite(9,0);
+        break;
+    case Qt::Key_S:
 
-            break;
+        juan->moveDownCharacter(move);
+
+        break;
+    default:
+        keyPressEvent(event);
     }
+
 }
 
 
-
-
-MainWindow::~MainWindow(){
-
-
-    delete ui;
-}

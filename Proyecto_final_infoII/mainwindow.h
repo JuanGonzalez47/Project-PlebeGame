@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "sprite.h"
+#include "characters.h"
+
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
@@ -25,5 +28,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    sprite *move = new sprite(":/mov_prin.png", 0, 0, 110, 100, 9,200,200);
+    charac *juan=new charac(2,2,5);
+
 };
 #endif // MAINWINDOW_H

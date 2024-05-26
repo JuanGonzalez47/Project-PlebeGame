@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mov_prin.png</file>
+    </qresource>
+</RCC>
