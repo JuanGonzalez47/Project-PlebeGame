@@ -42,7 +42,7 @@ void charac::moveLeftCharacter(sprite *move){
 void charac::moveRightCharacter(sprite *move){
 
     move->moveImage(speed,0);
-    move->setSprite();
+   move->setSprite();
 }
 
 

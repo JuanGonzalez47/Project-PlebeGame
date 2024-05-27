@@ -3,6 +3,7 @@
 
 #include "sprite.h"
 #include "characters.h"
+# include "charac_Prota.h"
 
 #include <QMainWindow>
 #include <QTimer>
@@ -27,9 +28,10 @@ public:
     ~MainWindow();
 
 private:
+
+    QGraphicsScene *scene;
     Ui::MainWindow *ui;
-    sprite *move = new sprite(":/mov_prin.png", 0, 0, 110, 100, 9,200,200);
-    charac *juan=new charac(2,2,5);
+    prota *juan;
 
 };
 #endif // MAINWINDOW_H
