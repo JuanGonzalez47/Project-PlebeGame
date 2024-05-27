@@ -1,6 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "sprite.h"
+#include "characters.h"
+# include "charac_Prota.h"
+
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
@@ -24,6 +28,10 @@ public:
     ~MainWindow();
 
 private:
+
+    QGraphicsScene *scene;
     Ui::MainWindow *ui;
+    prota *juan;
+
 };
 #endif // MAINWINDOW_H

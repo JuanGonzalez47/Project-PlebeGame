@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sprites.h"
-#include "characters.h"
 
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "sprite.h"
 #include <qdebug.h>
 #include <QLabel>
 #include <QPixmap>
@@ -14,57 +16,70 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QGraphicsScene *scene = new QGraphicsScene(this); // se debe crear una escena para manejar elementos gráficos
-    scene->setSceneRect(0,0, 800, 800);
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    scene->setSceneRect(0, 0, 1500, 800);
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->setFixedSize(1000+2  * ui->graphicsView->frameWidth(), 800+2 * ui->graphicsView->frameWidth());//manejar la relación de aspecto
+    ui->graphicsView->setFixedSize(1500+2* ui->graphicsView->frameWidth(),800+2* ui->graphicsView->frameWidth());
 
-    sprite *move = new sprite(ui->graphicsView);
-    scene -> addItem(move);
-    move->setPos(45,45);//PREGUNTAR
+    QPixmap backgroundImage(":/escena_final2.png");
+    //scene->addPixmap(backgroundImage);
+
+    // Escalar la imagen de fondo (por ejemplo, 3x en X y 2x en Y)
+    QPixmap scaledBackgroundImage = backgroundImage.scaled(
+        backgroundImage.width() * 1.45,
+        backgroundImage.height() * 2,
+        Qt::KeepAspectRatio,
+        Qt::SmoothTransformation);
+
+    // Crear un QGraphicsPixmapItem con la imagen escalada
+    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(scaledBackgroundImage);
+
+    // Agregar el QGraphicsPixmapItem a la escena
+    scene->addItem(background);
+    background->setPos(0, 170);
+
+    juan=new prota(2,2,5,scene);
+
+    // scene->addItem(move);  // Agregar el sprite a la escena
+    // move->setPos(200,200);
 }
 
-
+MainWindow::~MainWindow() {
+    delete ui;
+}
 
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
 
-    sprite move(":/dispa-mov-personaje.png",0,0,110,100,300,300);
 
     //Manejo del evento de tecla
     switch(event->key()) {
-        case Qt::Key_A:
+    case Qt::Key_A:
 
-            move.moveImage(-5,0);
-            move.setSprite(9,0);
+        juan->moveLeftProta();
 
-            break;
-        case Qt::Key_D:
+        break;
+    case Qt::Key_D:
 
-            move.moveImage(5,0);
-            move.setSprite(9,0);
+        juan->moveRihgtProta();
 
-            break;
-        case Qt::Key_W:
+        break;
+    case Qt::Key_W:
 
-            move.moveImage(0,5);
-            move.setSprite(9,0);
-            break;
-        case Qt::Key_S:
+        juan->moveUpProta();
 
-            move.moveImage(0,-5);
-            move.setSprite(9,0);
+        break;
 
-            break;
+    case Qt::Key_S:
+
+        juan->moveDownProta();
+
+        break;
+    default:
+        keyPressEvent(event);
     }
+
 }
 
 
-
-
-MainWindow::~MainWindow(){
-
-
-    delete ui;
-}
