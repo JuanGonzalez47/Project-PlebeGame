@@ -7,7 +7,6 @@ charac::charac(int _life,int _bullets,int _speed){
     life=_life;
     bullets=_bullets;
     speed=_speed;
-
 }
 
 

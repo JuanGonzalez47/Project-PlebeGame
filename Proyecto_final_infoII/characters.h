@@ -2,7 +2,9 @@
 #define CHARACTERS_H
 
 #include "sprite.h"
-
+#define vida_personaje 100
+#define balas_personaje 100
+#define velocidad_personaje 6
 
 
 class charac{
