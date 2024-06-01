@@ -8,9 +8,12 @@
 #include <QPixmap>
 
 
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    walter(5)
+
 {
     ui->setupUi(this);
 
@@ -53,15 +56,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setFixedSize(size_screen_w,size_screen_h);
     escena_nivel_2->setSceneRect(0,0, size_screen_w - 5, size_screen_h - 5);
     ui->graphicsView->setScene(escena_nivel_2);
-
+    //creacion del personaje principal del nivel 2
+    //timers para que el movimiento del eprsonaje se vea fluido
+    timerD = new QTimer(this);
+    timerD->setInterval(100); // Intervalo en milisegundos
+    connect(timerD, &QTimer::timeout, this, &MainWindow::handleDKey);
     if (true){ //agregar una condicion que se cumpla solo cuando pase el primer nivel
         //seteo del mapa del segundo nivel
         setMapaNivel_2();
+        set_personaje_principal();
         //seteo del eprsonaje en la escena
-
     }
-
-
 }
 
 MainWindow::~MainWindow() {
@@ -79,19 +84,28 @@ void MainWindow::paint(unsigned int pos_x_to_paint, unsigned int pos_y_to_paint,
 
 void MainWindow::setMapaNivel_2()
 {
-    QGraphicsPixmapItem *fondo = new QGraphicsPixmapItem(sprite_aux.SetSprite(0).scaled(ui->graphicsView->width(),ui->graphicsView->height()));
+    //setear fondo
+    fondo = new QGraphicsPixmapItem(sprite_aux.SetSprite(0).scaled(ui->graphicsView->width(),ui->graphicsView->height()));
     paint(0,0,0,fondo);
+    //seteo de objetos en el fondo (llantas y el telefono)
+    llanta_1 = new QGraphicsPixmapItem(sprite_aux.SetSprite(10).scaled(223,92));
+    paint(0,685,0,llanta_1);
+    llanta_2 = new QGraphicsPixmapItem(sprite_aux.SetSprite(10).scaled(223,92));
+    paint(1300,685,0,llanta_2);
+    telefono = new QGraphicsPixmapItem(sprite_aux.SetSprite(15).scaled(75,70));
+    paint(1250,685,0,telefono);
+
 }
 
 void MainWindow::set_personaje_principal()
 {
-
+    paint(600,600,0,walter.get_mov_derecha());
 }
 
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
-
+    if (event->isAutoRepeat())return;
 
     //Manejo del evento de tecla
     switch(event->key()) {
@@ -101,8 +115,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
         break;
     case Qt::Key_D:
-
-        juan->moveRihgtProta();
+        //juan->moveRihgtProta();
+        if (!isDKeyPressed) {
+            isDKeyPressed = true;
+            handleDKey();
+            timerD->start();
+        }
+        break;
+        walter.mover_derecha();
 
         break;
     case Qt::Key_W:
@@ -120,6 +140,21 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
         keyPressEvent(event);
     }
 
+
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    if (event->isAutoRepeat()) return;
+    if (event->key() == Qt::Key_D) {
+        isDKeyPressed = false;
+        timerD->stop();
+    }
 }
 
 
+void MainWindow::handleDKey()
+{
+    if (isDKeyPressed) {
+        walter.mover_derecha();
+    }
+}

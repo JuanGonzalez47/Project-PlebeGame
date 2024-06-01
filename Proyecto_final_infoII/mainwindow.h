@@ -8,8 +8,8 @@
 #include <QTimer>
 #include <QKeyEvent>
 
-#define size_screen_w 1920
-#define size_screen_h 1080
+#define size_screen_w 1600
+#define size_screen_h 920
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,7 +24,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     QGraphicsScene *escena_nivel_2;
     sprite sprite_aux;
-
+    QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono;
+    prota walter;
+    QTimer *timerD;
+    bool isDKeyPressed = false;
 
 public:
 
@@ -32,8 +35,10 @@ public:
     void setMapaNivel_2();
     void set_personaje_principal();
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void handleDKey();
 
 private:
 

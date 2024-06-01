@@ -54,6 +54,14 @@ sprite::sprite()
     setPixmap(telefono);
     mensaje.load(":/nivel-2/Imagenes nivel 2/Texto.png");
     setPixmap(mensaje);
+    salto_D.load(":/nivel-2/Imagenes nivel 2/salto-derecha.png");
+    setPixmap(salto_D);
+    salto_I.load(":/nivel-2/Imagenes nivel 2/salto-izquierda.png");
+    setPixmap(salto_I);
+    muerte.load(":/nivel-2/Imagenes nivel 2/muerte.png");
+    setPixmap(muerte);
+    firme.load(":/nivel-2/Imagenes nivel 2/firme.png");
+    setPixmap(firme);
 }
 
 void sprite::moveImage(int dx, int dy) {
@@ -149,10 +157,10 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
     //se encargara de cortar cada uno de los sprites de una imagen en especifico para proceder a hacer la animacion
     switch(value){
         //animacion para el personaje
-        case 0: copy = personaje_principal_mov_r.copy(pos_x,pos_y,width,height);
+        case 0: copy = personaje_principal_mov_r.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
-        case 1: copy = personaje_principal_mov_l.copy(pos_x,pos_y,width,height);
+        case 1: copy = personaje_principal_mov_l.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
     }
