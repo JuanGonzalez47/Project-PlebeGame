@@ -163,6 +163,12 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
         case 1: copy = personaje_principal_mov_l.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
+        case 2: copy = salto_D.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 3: copy = salto_I.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
     }
 }
 

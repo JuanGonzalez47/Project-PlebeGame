@@ -26,8 +26,8 @@ class MainWindow : public QMainWindow
     sprite sprite_aux;
     QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono;
     prota walter;
-    QTimer *timerD;
-    bool isDKeyPressed = false;
+    QTimer *timerD, *timerA;
+    bool isDKeyPressed = false, isAKeyPressed = false;
 
 public:
 
@@ -39,6 +39,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void handleDKey();
+    void handleAKey();
 
 private:
 

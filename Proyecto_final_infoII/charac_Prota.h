@@ -12,9 +12,9 @@ private:
 
     QGraphicsScene *scene;
     sprite *sprite_prota;
-    QPixmap *movimiento_derecha, *movimiento_izquierda;
-    QGraphicsPixmapItem *mov_derecha, *mov_izquierda;
-    int animation_counter_1 = 0;
+    QPixmap *movimiento_prota;
+    QGraphicsPixmapItem *mov_prota;
+    int animation_counter_1 = 0, animation_counter_2 = 6;
 
 
 public:
@@ -33,11 +33,11 @@ public:
     void rechargeProta();
 
     void mover_derecha();
+    void mover_izquierda();
+    void salto();
 
-    QPixmap *get_movimiento_derecha();
-    QPixmap *get_movimiento_izquierda();
-    QGraphicsPixmapItem *get_mov_derecha();
-    QGraphicsPixmapItem *get_mov_izquierda();
+    QPixmap *get_movimiento_prota();
+    QGraphicsPixmapItem *get_mov_prota();
 
 };
 
