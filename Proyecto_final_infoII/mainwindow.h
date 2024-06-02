@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "characters.h"
 # include "charac_Prota.h"
+#include "charac_enemy.h"
 
 #include <QMainWindow>
 #include <QTimer>
@@ -23,6 +24,7 @@ class MainWindow : public QMainWindow
 
 public:
 
+    void fondo();
     void keyPressEvent(QKeyEvent *event);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -32,6 +34,8 @@ private:
     QGraphicsScene *scene;
     Ui::MainWindow *ui;
     prota *juan;
+    enemy *ene;
+
 
 };
 #endif // MAINWINDOW_H

@@ -2,8 +2,12 @@
 #include "characters.h"
 
 
-charac::charac(int _life,int _bullets,int _speed){
+charac::charac(int _life,int _bullets,int _speed,qreal _x,qreal _y){
 
+
+
+    x=_x;
+    y=_y;
     life=_life;
     bullets=_bullets;
     speed=_speed;
@@ -42,7 +46,23 @@ void charac::moveLeftCharacter(sprite *move){
 void charac::moveRightCharacter(sprite *move){
 
     move->moveImage(speed,0);
-   move->setSprite();
+    move->setSprite();
+}
+
+void charac::setSpeed(){
+    speed*=-1;
+}
+
+qreal charac::getY(){
+
+    return y;
+
+}
+
+int charac::getSpeed(){
+
+    return speed;
+
 }
 
 

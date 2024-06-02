@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>Sprite_prota.png</file>
+        <file>soldado_rifle.png</file>
     </qresource>
 </RCC>

@@ -1,4 +1,5 @@
 # include "characters.h"
+#include <QTimer>
 
 
 #ifndef CHARAC_PROTA_H
@@ -11,16 +12,17 @@ private:
 
     QGraphicsScene *scene;
     sprite *sprite_prota;
-
+    QTimer *timer;
 
 public:
 
-    prota(int _life,int _bullets,int _speed,QGraphicsScene *_scene);
+    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,QGraphicsScene *_scene);
 
     void moveUpProta();
     void moveDownProta();
     void moveRihgtProta();
     void moveLeftProta();
+
 
     void shootProta();
     void deadProta();
