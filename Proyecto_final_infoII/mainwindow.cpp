@@ -59,7 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
     //creacion del personaje principal del nivel 2
     //timers para que el movimiento del eprsonaje se vea fluido
     timerD = new QTimer(this);
-    timerD->setInterval(100); // Intervalo en milisegundos
+    timerA = new QTimer(this);
+    timerA->setInterval(100);
+    timerD->setInterval(100);
+    connect(timerA, &QTimer::timeout, this, &MainWindow::handleAKey);
     connect(timerD, &QTimer::timeout, this, &MainWindow::handleDKey);
     if (true){ //agregar una condicion que se cumpla solo cuando pase el primer nivel
         //seteo del mapa del segundo nivel
@@ -99,9 +102,10 @@ void MainWindow::setMapaNivel_2()
 
 void MainWindow::set_personaje_principal()
 {
-    paint(600,600,0,walter.get_mov_derecha());
+    paint(600,600,0,walter.get_mov_prota());
 }
 
+//recordar bloquear los keys W Y S para el segundo nivel
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
@@ -110,9 +114,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     //Manejo del evento de tecla
     switch(event->key()) {
     case Qt::Key_A:
-
-        juan->moveLeftProta();
-
+        //juan->moveLeftProta();
+        if (!isAKeyPressed) {
+            isAKeyPressed = true;
+            handleAKey();
+            timerA->start();
+        }
         break;
     case Qt::Key_D:
         //juan->moveRihgtProta();
@@ -121,9 +128,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             handleDKey();
             timerD->start();
         }
-        break;
-        walter.mover_derecha();
-
         break;
     case Qt::Key_W:
 
@@ -136,6 +140,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
         juan->moveDownProta();
 
         break;
+    case Qt::Key_Space:
+        //poner el salto del personaje
     default:
         keyPressEvent(event);
     }
@@ -149,6 +155,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
         isDKeyPressed = false;
         timerD->stop();
     }
+    if (event->key() == Qt::Key_A) {
+        isAKeyPressed = false;
+        timerA->stop();
+    }
 }
 
 
@@ -156,5 +166,12 @@ void MainWindow::handleDKey()
 {
     if (isDKeyPressed) {
         walter.mover_derecha();
+    }
+}
+
+void MainWindow::handleAKey()
+{
+    if (isAKeyPressed) {
+        walter.mover_izquierda();
     }
 }

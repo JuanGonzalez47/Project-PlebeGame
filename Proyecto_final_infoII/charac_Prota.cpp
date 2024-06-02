@@ -14,14 +14,24 @@ prota::prota(int _life)
     sprite sprite_to_cut;
     //constructor para el sprite del protagonista del nivel_2
     //for para las animaciones de movimiento y muerte
-    movimiento_derecha = new QPixmap[7];
-    movimiento_izquierda = new QPixmap[7];
-    for (unsigned int x = 0; x < 7; x++){
-        movimiento_derecha[x] = sprite_to_cut.set_sprite_for_animation(x,0,0,130,160);
-        movimiento_izquierda[x] = sprite_to_cut.set_sprite_for_animation(x,0,0,130,160);
+    movimiento_prota = new QPixmap[26];
+    unsigned int cont = 0;
+    for (unsigned int x = 0; x < 26; x++){
+        if (x < 7) movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(x,0,0,132,162);
+        else if (x >= 7 && x < 14){
+            movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,1,132,162);
+            cont++;
+            if (cont == 7) cont = 0;
+        }
+        else if (x >= 14 && x < 20){
+            if (x == 19) movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(0,0,2,130,192);
+            else{
+                movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,2,130,192);
+                cont++;
+            }
+        }
     }
-    mov_derecha = new QGraphicsPixmapItem(movimiento_derecha[0]);
-    mov_izquierda = new QGraphicsPixmapItem(movimiento_izquierda[0]);
+    mov_prota = new QGraphicsPixmapItem(movimiento_prota[19]);
 }
 
 prota::prota()
@@ -72,30 +82,34 @@ void prota::mover_derecha()
 {
     animation_counter_1++;
     if (animation_counter_1 == 6) animation_counter_1 = 0;
-    mov_derecha->setPixmap(movimiento_derecha[animation_counter_1]);
-    mov_derecha->setX(mov_derecha->x()+velocidad_personaje);
+    mov_prota->setPixmap(movimiento_prota[animation_counter_1]);
+    mov_prota->setX(mov_prota->x()+velocidad_personaje);
 }
 
-QPixmap *prota::get_movimiento_derecha()
+void prota::mover_izquierda()
 {
-    return movimiento_derecha;
+    animation_counter_2++;
+    if (animation_counter_2 == 13) animation_counter_2 = 7;
+    mov_prota->setPixmap(movimiento_prota[animation_counter_2]);
+    mov_prota->setX(mov_prota->x()-velocidad_personaje);
 }
 
-QPixmap *prota::get_movimiento_izquierda()
+void prota::salto()
 {
-    return movimiento_izquierda;
+    //agregar animacion del salto, tomarn en cuenta la ecuacion de movimiento parabolico
 }
 
-QGraphicsPixmapItem *prota::get_mov_derecha()
+QPixmap *prota::get_movimiento_prota()
 {
-    return mov_derecha;
+    return movimiento_prota;
 }
 
 
-QGraphicsPixmapItem *prota::get_mov_izquierda()
+QGraphicsPixmapItem *prota::get_mov_prota()
 {
-    return mov_izquierda;
+    return mov_prota;
 }
+
 
 void prota::deadProta(){
 
