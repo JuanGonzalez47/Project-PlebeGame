@@ -31,4 +31,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     background.qrc \
+    imagenes-nivel-2.qrc \
     sprites.qrc
