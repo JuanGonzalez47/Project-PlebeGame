@@ -1,10 +1,12 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
+#include <QTimer>
 #include "sprite.h"
 #define vida_personaje 100
 #define balas_personaje 100
-#define velocidad_personaje 15
+#define velocidad_personaje 30
+#define velocidad_helicoptero 10
 
 
 class charac{

@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     charac_Prota.cpp \
+    charac_enemy.cpp \
     characters.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     charac_Prota.h \
+    charac_enemy.h \
     characters.h \
     mainwindow.h \
     sprite.h

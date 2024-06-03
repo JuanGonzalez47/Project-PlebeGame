@@ -111,11 +111,11 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
 
-    case 7: imagen_seleccionada = helicoptero_amigo.copy(0,0,helicoptero_amigo.width(),helicoptero_amigo.height());
+    case 7: imagen_seleccionada = helicoptero_enemigo.copy(0,0,helicoptero_enemigo.width(),helicoptero_enemigo.height());
         return imagen_seleccionada;
         break;
 
-    case 8: imagen_seleccionada = helicoptero_enemigo.copy(0,0,helicoptero_enemigo.width(),helicoptero_enemigo.height());
+    case 8: imagen_seleccionada = helicoptero_amigo.copy(0,0,helicoptero_amigo.width(),helicoptero_amigo.height());
         return imagen_seleccionada;
         break;
 
@@ -167,6 +167,9 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
             setPixmap(copy);
             return copy;
         case 3: copy = salto_I.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 4: copy = helicoptero_amigo.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
     }

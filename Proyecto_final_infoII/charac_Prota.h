@@ -1,10 +1,12 @@
 # include "characters.h"
-
+#include <cmath>
 
 #ifndef CHARAC_PROTA_H
 #define CHARAC_PROTA_H
 
-#define life_prota_level_2 = 5
+#define life_prota_level_2 5
+#define angulo1 75
+#define g 9.8
 
 class prota : protected charac {
 
@@ -14,7 +16,8 @@ private:
     sprite *sprite_prota;
     QPixmap *movimiento_prota;
     QGraphicsPixmapItem *mov_prota;
-    int animation_counter_1 = 0, animation_counter_2 = 6;
+    int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13;
+    double y_inicial_ = 0, x_inicial_ = 0, t = 0;
 
 
 public:
@@ -34,7 +37,7 @@ public:
 
     void mover_derecha();
     void mover_izquierda();
-    void salto();
+    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace);
 
     QPixmap *get_movimiento_prota();
     QGraphicsPixmapItem *get_mov_prota();
