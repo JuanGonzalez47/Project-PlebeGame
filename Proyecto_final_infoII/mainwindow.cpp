@@ -39,10 +39,19 @@ MainWindow::MainWindow(QWidget *parent)
     background->setPos(0, 170);
 
 
-    juan=new prota(400,400,2,2,10,scene);
-    ene=new enemy(1000,500,2,2,10,scene);
 
-    ene->moveAndShoot();
+
+    juan=new prota(400,400,10,10,10,scene);
+
+    ene1 = new enemy*[4];
+    for(int i = 0; i < 4; ++i) {
+        ene1[i] = new enemy();
+    }
+
+    for(int i=0;i<4;i++){
+        ene1[i]->moveAndShoot();
+
+    }
 
 }
 

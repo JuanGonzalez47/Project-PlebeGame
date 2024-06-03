@@ -1,6 +1,8 @@
 #include "sprite.h"
 # include <iostream>
 
+
+
 sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _x,qreal _y) {
     spriteSheet.load(name_image);
 
@@ -17,6 +19,10 @@ sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_wid
 
     sprit = spriteSheet.copy(sprite_x, sprite_y, sprite_width, sprite_height);
     setPixmap(sprit);
+}
+
+sprite::sprite(){
+
 }
 
 void sprite::moveImage(int dx, int dy) {
@@ -84,6 +90,12 @@ int sprite::getCont(){
 qreal sprite::gety(){
 
     return y;
+
+}
+
+qreal sprite::getx(){
+
+    return x;
 
 }
 

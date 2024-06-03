@@ -14,6 +14,11 @@ charac::charac(int _life,int _bullets,int _speed,qreal _x,qreal _y){
 
 }
 
+charac::charac(){
+    //inicializar constructor por defecto
+
+}
+
 
 
 void charac::methodCharacter(sprite *method){
@@ -47,6 +52,11 @@ void charac::moveRightCharacter(sprite *move){
 
     move->moveImage(speed,0);
     move->setSprite();
+}
+
+void charac::bullet(sprite *bullet, QGraphicsScene *scene, QTimer *timer){
+
+
 }
 
 void charac::setSpeed(){

@@ -34,8 +34,7 @@ private:
     QGraphicsScene *scene;
     Ui::MainWindow *ui;
     prota *juan;
-    enemy *ene;
-
+    enemy **ene1;
 
 };
 #endif // MAINWINDOW_H

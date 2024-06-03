@@ -18,6 +18,7 @@ private:
 public:
 
     enemy(qreal _x,qreal _y,int _life,int _bullets,int _speed,QGraphicsScene *_scene);
+    enemy();
 
     void moveUpEnemy();
     void moveDownEnemy();

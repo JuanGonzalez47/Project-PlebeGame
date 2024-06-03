@@ -12,7 +12,11 @@ private:
 
     QGraphicsScene *scene;
     sprite *sprite_prota;
+    sprite **sprite_bullet;
+    QTimer ** timer_bullets;
     QTimer *timer;
+
+    int cont_bullets=0;
 
 public:
 

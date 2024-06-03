@@ -33,6 +33,10 @@ enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScen
 
 }
 
+enemy::enemy(){
+
+}
+
 void enemy::moveUpEnemy() {
 
 
@@ -86,37 +90,21 @@ void enemy::shootEnemy(){
 
 
 void enemy::moveAndShoot() {
+
     timer2 = new QTimer(this);
     connect(timer2, &QTimer::timeout, [=]() {
-
-
-
         mov_ran++;
         moveUpEnemy();
 
 
         if (mov_ran == n_ran) {
 
-            qDebug() << " n_ran :";
-            qDebug() << n_ran;
-
             if(getY()<480){
                 n_ran = (numRandom(0, (sprite_enemy_rifle->gety()-280)))/(abs(getSpeed()));
-
-                qDebug() << " lim1 :";
-                qDebug() << (sprite_enemy_rifle->gety()-280);
-                qDebug() << " y :";
-                qDebug() <<sprite_enemy_rifle->gety();
             }
             else{
                 n_ran = (numRandom(0, (670-sprite_enemy_rifle->gety())))/(abs(getSpeed()));
-                qDebug() << " lim2 :";
-                qDebug() << (670-sprite_enemy_rifle->gety());
-                qDebug() << " y :";
-                qDebug() <<sprite_enemy_rifle->gety();
             }
-
-
             if(sprite_enemy_rifle->gety()<=320 || sprite_enemy_rifle->gety()>=640){
                 setSpeed();
                 n_ran=10;

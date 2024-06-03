@@ -8,7 +8,8 @@
 class sprite : public QGraphicsPixmapItem {
 public:
     sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _pos_x,qreal _pos_y);
-    sprite(QString name_image);
+    sprite();
+
     void moveImage(int dx, int dy);
 
 
@@ -19,6 +20,7 @@ public:
     int getCont();
 
     qreal gety();
+    qreal getx();
 
 private:
     qreal x;
