@@ -1,10 +1,8 @@
 # include "charac_Prota.h"
 #include <QTimer>
-prota::prota(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed, _x,_y), scene(_scene){
 
-    sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 98,_x,_y);
-    scene->addItem(sprite_prota);  // Agregar el sprite a la escena
-    sprite_prota->setPos(_x,_y);
+prota::prota(qreal _x,qreal _y,int _life, int _bullets, int _speed,sprite *s_prota) : charac (_life,_bullets,_speed, _x,_y){
+    sprite_prota=s_prota;
 }
 
 void prota::moveUp() {
@@ -40,6 +38,18 @@ void prota::shoot(){
 void prota::recharge(){
 
     methodCharacter(sprite_prota);
+
+}
+
+void prota::setCont_bullets(){
+
+    cont_bullets++;
+
+}
+
+int prota::getCont_bullets(){
+
+    return cont_bullets;
 
 }
 

@@ -10,14 +10,13 @@ class prota : public charac {
 
 private:
 
-    QGraphicsScene *scene;
     sprite *sprite_prota;
     sprite **sprite_bullet;
     int cont_bullets=0;
 
 public:
 
-    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,QGraphicsScene *_scene);
+    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,sprite *s_prota);
 
     void moveUp();
     void moveDown();
@@ -28,6 +27,9 @@ public:
     void shoot();
     void dead();
     void recharge();
+
+    void setCont_bullets();
+    int getCont_bullets();
 
 
 };

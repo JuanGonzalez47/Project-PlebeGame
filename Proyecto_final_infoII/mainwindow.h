@@ -27,13 +27,16 @@ class MainWindow : public QMainWindow
     sprite *sprite_prota;
     sprite *sprite_enemy_rifle;
 
+    sprite **sprite_bullet;
+    QTimer ** timer_bullets;
+
 
 
 public:
 
     // prota
     void rechargeProta();
-    void shootProta();
+    void shootProta(prota *prot);
 
     //enemy
 
@@ -52,6 +55,7 @@ private:
     QGraphicsScene *scene;
     Ui::MainWindow *ui;
     prota *marco;
+    enemy *ene;
 
 };
 #endif // MAINWINDOW_H

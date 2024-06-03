@@ -20,7 +20,6 @@ charac::charac(){
 }
 
 
-
 void charac::methodCharacter(sprite *method){
 
     method->setSprite();
