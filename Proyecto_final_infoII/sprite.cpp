@@ -69,9 +69,14 @@ void sprite::setAttributes(int _sprite_y, int _width, int n){
 
     // por si se trabaja con un solo sprite poder moverse en el libremente cambiando el numero de imagenes cambiar
     //el ancho de la imagen y la posicion en y donde rotara en x en cada imagen
+     qDebug("PHOI");
+
     sprite_y=_sprite_y;
+
     sprite_width=_width;
+    qDebug("2");
     n_image=n;
+    qDebug("3");
 
 }
 

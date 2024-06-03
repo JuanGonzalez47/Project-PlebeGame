@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include "sprite.h"
 #include "characters.h"
 # include "charac_Prota.h"
 #include "charac_enemy.h"
-
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
@@ -22,7 +22,23 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    QTimer *t_prota_recharge,*t_prota_dead,*t_prota_shoot;
+    QTimer *t_enemy_shoot,*t_enemy_move;
+    sprite *sprite_prota;
+    sprite *sprite_enemy_rifle;
+
+
+
 public:
+
+    // prota
+    void rechargeProta();
+    void shootProta();
+
+    //enemy
+
+    void shootEnemy(enemy *ene);
+    void moveAndShootEnemy(enemy *ene);
 
     void fondo();
     void keyPressEvent(QKeyEvent *event);
@@ -31,10 +47,11 @@ public:
 
 private:
 
+
+
     QGraphicsScene *scene;
     Ui::MainWindow *ui;
-    prota *juan;
-    enemy **ene1;
+    prota *marco;
 
 };
 #endif // MAINWINDOW_H

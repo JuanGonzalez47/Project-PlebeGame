@@ -7,11 +7,9 @@
 
 
 
-class charac : public QObject{
+class charac{
 
 private:
-
-
     int life;
     int bullets;
     int speed;
@@ -27,12 +25,10 @@ public:
     void moveDownCharacter(sprite *move);
     void moveLeftCharacter(sprite *move);
     void moveRightCharacter(sprite *move);
-    void bullet(sprite *bullet,QGraphicsScene *scene,QTimer *timer);
-
     void setSpeed();
-
     qreal getY();
     int getSpeed();
+
 };
 
 

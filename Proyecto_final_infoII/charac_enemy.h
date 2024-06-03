@@ -11,8 +11,6 @@ private:
 
     QGraphicsScene *scene;
     sprite *sprite_enemy_rifle;
-    QTimer *timer;
-    QTimer *timer2;
     int n_ran=5;
     int mov_ran=-1;
 public:
@@ -24,11 +22,15 @@ public:
     void moveDownEnemy();
     void moveRihgtEnemy();
     void moveLeftEnemy();
-
-
-    void moveAndShoot();
     void shootEnemy();
     void deadEnemy();
+
+    void setMovRan();
+    void setN_ran(int _n_ran);
+
+    int getN_ran();
+    int getMov_ran();
+
 
 };
 

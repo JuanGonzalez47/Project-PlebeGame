@@ -54,10 +54,6 @@ void charac::moveRightCharacter(sprite *move){
     move->setSprite();
 }
 
-void charac::bullet(sprite *bullet, QGraphicsScene *scene, QTimer *timer){
-
-
-}
 
 void charac::setSpeed(){
     speed*=-1;
