@@ -172,6 +172,12 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
         case 4: copy = helicoptero_amigo.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
+        case 5: copy = misiles.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 6: copy = firme.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
     }
 }
 

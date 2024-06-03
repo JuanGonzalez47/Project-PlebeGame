@@ -18,69 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    /*QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setSceneRect(0, 0, 1500, 800);
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setFixedSize(1500+2* ui->graphicsView->frameWidth(),800+2* ui->graphicsView->frameWidth());
-
-    QPixmap backgroundImage(":/escena_final2.png");
-    //scene->addPixmap(backgroundImage);
-
-    // Escalar la imagen de fondo (por ejemplo, 3x en X y 2x en Y)
-    QPixmap scaledBackgroundImage = backgroundImage.scaled(
-        backgroundImage.width() * 1.45,
-        backgroundImage.height() * 2,
-        Qt::KeepAspectRatio,
-        Qt::SmoothTransformation);
-
-    // Crear un QGraphicsPixmapItem con la imagen escalada
-    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(scaledBackgroundImage);
-
-    // Agregar el QGraphicsPixmapItem a la escena
-    scene->addItem(background);
-    background->setPos(0, 170);
-
-    juan=new prota(2,2,5,scene);
-
-    // scene->addItem(move);  // Agregar el sprite a la escena
-    // move->setPos(200,200);*/
-
-    //QGraphicsScene *scene = new QGraphicsScene(this); // se debe crear una escena para manejar elementos gráficos
-    //se define la escena en la cual se cargara el nivel 2
-    escena_nivel_2 = new QGraphicsScene(this); // se debe crear una escena para manejar elementos gráficos
-    //scene->setSceneRect(0,0, 800, 800);
-
-    //ui->graphicsView->setScene(scene);
-    //ui->graphicsView->setFixedSize(1000+2  * ui->graphicsView->frameWidth(), 800+2 * ui->graphicsView->frameWidth());//manejar la relación de aspecto
-
-    //relaxion de aspecto del nivel 2
-    ui->graphicsView->setFixedSize(size_screen_w ,size_screen_h);
-    escena_nivel_2->setSceneRect(0,0, size_screen_w - 5, size_screen_h - 5);
-    ui->graphicsView->setScene(escena_nivel_2);
-    //creacion del personaje principal del nivel 2
-    //timers para que el movimiento del eprsonaje se vea fluido
-    timerD = new QTimer(this);
-    timerA = new QTimer(this);
-    timerPendulo = new QTimer(this);
-    timerMovimientoRecto = new QTimer(this);
-    timerSpace = new QTimer(this);
-    timerIniciarPendulo = new QTimer(this);
-    timerDisparo = new QTimer(this);
-    timerDisparo->setInterval(100);
-    timerMovimientoRecto->setInterval(60);
-    timerPendulo->setInterval(1);
-    timerSpace->setInterval(1);
-    timerA->setInterval(100);
-    timerD->setInterval(100);
-    connect(timerDisparo, &QTimer::timeout, this, &MainWindow::preparo_disparo);
-    connect(timerIniciarPendulo, &QTimer::timeout, this, &MainWindow::iniciar_pendulo);
-    connect(timerPendulo, &QTimer::timeout, this, &MainWindow::pendulo);
-    connect(timerSpace, &QTimer::timeout, this, &MainWindow::SpaceKey);
-    connect(timerA, &QTimer::timeout, this, &MainWindow::handleAKey);
-    connect(timerD, &QTimer::timeout, this, &MainWindow::handleDKey);
-    connect(timerMovimientoRecto, &QTimer::timeout, this, &MainWindow::MovimientoRecto);
-
     if (true){ //agregar una condicion que se cumpla solo cuando pase el primer nivel
+        set_window();
+        set_timers();
+        //bloquear teclas de movimiento, w s (desactivar las otras)
+        validKey = false;
         //seteo del mapa del segundo nivel
         setMapaNivel_2();
         //seteo del eprsonaje en la escena
@@ -130,6 +72,12 @@ void MainWindow::set_helicoptero_enemigo()
     paint(600,0,0,nazi.get_mov_enemigo());
 }
 
+void MainWindow::set_mensaje()
+{
+    mensaje = new QGraphicsPixmapItem(sprite_aux.SetSprite(16).scaled(440,440));
+    paint(1100,0,0,mensaje);
+}
+
 //recordar bloquear los keys W Y S para el segundo nivel
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -138,42 +86,58 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
     //reiniciar el estado de la variable para activar el space
 
-    if (!timerSpace->isActive()) spacePressed = true;
+    if (!timerSpace->isActive()){
+        spacePressed = true;
+        validKey_move  = true;
+    }
+    if (!timerFirme->isActive()){
+        validKey_move = true;
+        escena_nivel_2->removeItem(mensaje);
+    }
 
     //Manejo del evento de tecla
     switch(event->key()) {
     case Qt::Key_A:
-        //juan->moveLeftProta();
-        if (!isAKeyPressed) {
+        if (!isAKeyPressed && validKey_move) {
             isAKeyPressed = true;
+            TeclaPressedA = true;
             handleAKey();
             timerA->start();
         }
         break;
     case Qt::Key_D:
-        //juan->moveRihgtProta();
-        if (!isDKeyPressed) {
+        if (!isDKeyPressed && validKey_move) {
             isDKeyPressed = true;
+            TeclaPressedA = false;
             handleDKey();
             timerD->start();
+            if (telefonoExist){
+                if ((walter.get_mov_prota()->x() + 300) >= telefono->x()){
+                    set_mensaje();
+                    escena_nivel_2->removeItem(telefono);
+                    timerFirme->start();
+                    validKey_move = false;
+                    telefonoExist = false;
+                }
+            }
         }
         break;
     case Qt::Key_W:
-
-        juan->moveUpProta();
+        if (validKey){
+        }
 
         break;
 
     case Qt::Key_S:
-
-        juan->moveDownProta();
-
+        if (validKey){
+        }
         break;
     case Qt::Key_Space:
-        if (spacePressed){
+        if (spacePressed && validKey_move){
             SpaceKey();
             timerSpace->start();
             spacePressed = false;
+            validKey_move  = false;
         }
         break;
     }
@@ -210,12 +174,14 @@ void MainWindow::handleAKey()
 
 void MainWindow::SpaceKey()
 {
-    walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace);
+    if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,true);
+    else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,false);
+
 }
 
 void MainWindow::pendulo()
 {
-    nazi.pendulo_simple(nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo);
+    nazi.pendulo_simple(nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo,timerMisil);
 }
 
 void MainWindow::MovimientoRecto()
@@ -226,7 +192,7 @@ void MainWindow::MovimientoRecto()
 void MainWindow::iniciar_secuencia()
 {
     int tiempo_aleatorio = 20 + (rand() % 6);
-    timerIniciarPendulo->start(tiempo_aleatorio * 1000);
+    timerIniciarPendulo->start(tiempo_aleatorio*1000);
 }
 
 void MainWindow::iniciar_pendulo()
@@ -242,5 +208,73 @@ void MainWindow::preparo_disparo()
     nazi.animacion_preparo_disparo(timerPendulo,timerDisparo);
 }
 
+void MainWindow::misil()
+{
+    unsigned int pos_x = nazi.get_mov_enemigo()->x() + 40;
+    unsigned int pos_y = nazi.get_mov_enemigo()->y() + 120;
+    paint(pos_x,pos_y,0,nazi.get_mov_misil());
+    timerMisil->stop();
+    timerMisil_circular->start();
+}
+
+void MainWindow::circular()
+{
+    nazi.movimiento_cirular(timerMisil_circular,nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerSeguimiento);
+}
+
+void MainWindow::seguimiento()
+{
+    QVector2D pos_personaje(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
+    nazi.seguimiento_mov(pos_personaje,timerSeguimiento);
+}
+
+void MainWindow::firme()
+{
+    walter.firme(timerFirme);
+}
+
+void MainWindow::set_timers()
+{
+    timerD = new QTimer(this);
+    timerA = new QTimer(this);
+    timerPendulo = new QTimer(this);
+    timerMovimientoRecto = new QTimer(this);
+    timerSpace = new QTimer(this);
+    timerMisil = new QTimer(this);
+    timerIniciarPendulo = new QTimer(this);
+    timerDisparo = new QTimer(this);
+    timerMisil_circular = new QTimer(this);
+    timerSeguimiento = new QTimer (this);
+    timerFirme = new QTimer (this);
+    timerFirme->setInterval(100);
+    timerSeguimiento->setInterval(25);
+    timerDisparo->setInterval(100);
+    timerMovimientoRecto->setInterval(60);
+    timerPendulo->setInterval(1);
+    timerSpace->setInterval(1);
+    timerA->setInterval(100);
+    timerD->setInterval(100);
+    timerMisil_circular->setInterval(1);
+    timerMisil->setInterval(10);
+    connect(timerFirme, &QTimer::timeout, this, &MainWindow::firme);
+    connect(timerSeguimiento, &QTimer::timeout, this, &MainWindow::seguimiento);
+    connect(timerMisil_circular, &QTimer::timeout, this, &MainWindow::circular);
+    connect(timerMisil, &QTimer::timeout, this, &MainWindow::misil);
+    connect(timerDisparo, &QTimer::timeout, this, &MainWindow::preparo_disparo);
+    connect(timerIniciarPendulo, &QTimer::timeout, this, &MainWindow::iniciar_pendulo);
+    connect(timerPendulo, &QTimer::timeout, this, &MainWindow::pendulo);
+    connect(timerSpace, &QTimer::timeout, this, &MainWindow::SpaceKey);
+    connect(timerA, &QTimer::timeout, this, &MainWindow::handleAKey);
+    connect(timerD, &QTimer::timeout, this, &MainWindow::handleDKey);
+    connect(timerMovimientoRecto, &QTimer::timeout, this, &MainWindow::MovimientoRecto);
+}
+
+void MainWindow::set_window()
+{
+    escena_nivel_2 = new QGraphicsScene(this);
+    ui->graphicsView->setFixedSize(size_screen_w ,size_screen_h);
+    escena_nivel_2->setSceneRect(0,0, size_screen_w - 5, size_screen_h - 5);
+    ui->graphicsView->setScene(escena_nivel_2);
+}
 
 
