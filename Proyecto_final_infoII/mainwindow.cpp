@@ -38,16 +38,48 @@ MainWindow::MainWindow(QWidget *parent)
     scene->addItem(background);
     background->setPos(0, 170);
 
-    juan=new prota(2,2,5,scene);
 
-    // scene->addItem(move);  // Agregar el sprite a la escena
-    // move->setPos(200,200);
+
+
+    juan=new prota(400,400,10,10,10,scene);
+
+    ene1 = new enemy*[4];
+    for(int i = 0; i < 4; ++i) {
+        ene1[i] = new enemy();
+    }
+
+    for(int i=0;i<4;i++){
+        ene1[i]->moveAndShoot();
+
+    }
+
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
+
+/*void MainWindow::fondo(){
+
+    QPixmap backgroundImage(":/escena_final2.png");
+    //scene->addPixmap(backgroundImage);
+
+    // Escalar la imagen de fondo (por ejemplo, 3x en X y 2x en Y)
+    QPixmap scaledBackgroundImage = backgroundImage.scaled(
+        backgroundImage.width() * 1.45,
+        backgroundImage.height() * 2,
+        Qt::KeepAspectRatio,
+        Qt::SmoothTransformation);
+
+    // Crear un QGraphicsPixmapItem con la imagen escalada
+    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(scaledBackgroundImage);
+
+    // Agregar el QGraphicsPixmapItem a la escena
+    scene->addItem(background);
+    background->setPos(0, 170);
+
+}*/
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
@@ -76,8 +108,22 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
         juan->moveDownProta();
 
         break;
+
+    case Qt::Key_R:
+
+          juan->rechargeProta();
+
+        break;
+
+    case Qt::Key_Return:
+
+        juan->shootProta();
+
+        break;
+
     default:
-        keyPressEvent(event);
+
+        QMainWindow::keyPressEvent(event);
     }
 
 }

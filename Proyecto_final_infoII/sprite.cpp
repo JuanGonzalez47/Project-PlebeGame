@@ -1,4 +1,7 @@
 #include "sprite.h"
+# include <iostream>
+
+
 
 sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _x,qreal _y) {
     spriteSheet.load(name_image);
@@ -18,11 +21,32 @@ sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_wid
     setPixmap(sprit);
 }
 
+sprite::sprite(){
+
+}
+
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
-    x += dx;
-    y += dy;
+
+    if(y>=300 && y<=660){
+        y+= dy;
+    }else if(y<300){
+        y+=5;
+    }else{
+        y--;
+    }
+
+    if(x<=1400 && x>=-10){
+        x+= dx;
+    }else if(x<-10){
+        x+=5;
+    }else{
+        x--;
+    }
+
+
     setPos(x, y);
+
 }
 
 void sprite::setSprite() {
@@ -34,6 +58,11 @@ void sprite::setSprite() {
     if (cont == n_image) {
         cont = 0;
     }
+
+
+
+
+
 }
 
 void sprite::setAttributes(int _sprite_y, int _width, int n){
@@ -45,3 +74,29 @@ void sprite::setAttributes(int _sprite_y, int _width, int n){
     n_image=n;
 
 }
+
+void sprite::setCont(int _cont){
+
+    cont=_cont;
+
+}
+
+int sprite::getCont(){
+
+    return cont;
+
+}
+
+qreal sprite::gety(){
+
+    return y;
+
+}
+
+qreal sprite::getx(){
+
+    return x;
+
+}
+
+
