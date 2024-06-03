@@ -31,7 +31,7 @@ prota::prota(int _life)
             }
         }
     }
-    mov_prota = new QGraphicsPixmapItem(movimiento_prota[19]);
+    mov_prota = new QGraphicsPixmapItem(movimiento_prota[0]);
 }
 
 prota::prota()
@@ -94,9 +94,53 @@ void prota::mover_izquierda()
     mov_prota->setX(mov_prota->x()-velocidad_personaje);
 }
 
-void prota::salto()
+void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace)
 {
-    //agregar animacion del salto, tomarn en cuenta la ecuacion de movimiento parabolico
+    animation_counter_3++;
+    //realizar primero las animaciones de tomar impulso
+    if (animation_counter_3 == 14 || animation_counter_3 == 15) mov_prota->setPixmap(movimiento_prota[animation_counter_3]);
+
+    //ahora si realizar el movimiento parabolico
+
+    if(animation_counter_3 >= 16){
+        //componente Vx es constante, la componente Vy no, y esta es afectada por la gravedad.
+        //los cosenos y los senos en las formulas salen de la descomposicion vectorial
+        //ecuaciones para regir el movimiento: Vx = Vox = Vo*cos(angulo), Vy = Voy - g*t, siendo Voy = Vo*sen(angulo)
+        //ecuaciones para regir la posicion en x y y, x = xo + vox*t (ecuacion MRU) no hay aceleracion, en Y (MRUA) y = yo + voy*t - 1/2*g*t^2.
+
+        //sumarle al tiempo para actualizar posicion y al contador de la animacion
+        t+=0.01;
+
+        if (t == 0.01 ){
+            y_inicial_ = y_inicial;
+            x_inicial_ = x_inicial;
+        }
+
+        //definir Voy, Vox
+
+        double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
+        double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
+
+        //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
+        double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
+        double new_x = x_inicial_ + Vox*t;
+
+        animation_counter_3++;
+        mov_prota->setPixmap(movimiento_prota[16]);
+        mov_prota->setX(new_x);
+        mov_prota->setY(new_y);
+
+        if (new_y >= 600 && animation_counter_3 >= 1000){
+            //parar animacion ya que volvimos a nuestra y de partida y por ende ya estamos en el suelo
+            //agregar animacion de aterrizaje y evaluar sui su posicion fianal es el de la llanta
+            mov_prota->setPixmap(movimiento_prota[0]);
+            animation_counter_3 = 13;
+            t = 0;
+            timerSpace->stop();
+        }
+    }
+
+
 }
 
 QPixmap *prota::get_movimiento_prota()
@@ -109,6 +153,7 @@ QGraphicsPixmapItem *prota::get_mov_prota()
 {
     return mov_prota;
 }
+
 
 
 void prota::deadProta(){

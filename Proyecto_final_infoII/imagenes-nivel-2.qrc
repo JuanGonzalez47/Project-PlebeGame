@@ -4,9 +4,7 @@
         <file>Imagenes nivel 2/explosion_desvanecida.png</file>
         <file>Imagenes nivel 2/Fondo.gif</file>
         <file>Imagenes nivel 2/game_over.jpg</file>
-        <file>Imagenes nivel 2/helices.png</file>
         <file>Imagenes nivel 2/helicoptero-amigo-Photoroom.png-Photoroom.png</file>
-        <file>Imagenes nivel 2/helicoptero-enemigo.png</file>
         <file>Imagenes nivel 2/Lanzamisil.png</file>
         <file>Imagenes nivel 2/llanta.png</file>
         <file>Imagenes nivel 2/misiles.png</file>
@@ -20,5 +18,6 @@
         <file>Imagenes nivel 2/muerte.png</file>
         <file>Imagenes nivel 2/salto-derecha.png</file>
         <file>Imagenes nivel 2/salto-izquierda.png</file>
+        <file>Imagenes nivel 2/helicoptero-enemigo.png</file>
     </qresource>
 </RCC>
