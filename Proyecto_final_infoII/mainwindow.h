@@ -28,8 +28,10 @@ class MainWindow : public QMainWindow
     sprite *sprite_prota;
     sprite *sprite_enemy_rifle;
 
-    sprite **sprite_bullet;
-    QTimer ** timer_bullets;
+   // QTimer ** timer_bullets;
+
+    QTimer *bullet_timer;
+    sprite *sprite_bullet;
 
     std::vector<QGraphicsPixmapItem*> obstacleItems;
 
@@ -44,7 +46,7 @@ class MainWindow : public QMainWindow
 
     unsigned int cont_obstacle=0;
 
-    unsigned int num_obstacle=1;
+    unsigned int num_obstacle=3;
 
 
 
@@ -60,9 +62,8 @@ public:
     void shootEnemy(enemy *ene);
     void moveAndShootEnemy(enemy *ene);
 
-    void collision(int i);
+    void bullet();
 
-    void resolveCollision(QGraphicsItem* movingItem, QGraphicsItem* staticItem);
     void setObstacles();
     void keyPressEvent(QKeyEvent *event);
     MainWindow(QWidget *parent = nullptr);
