@@ -61,10 +61,14 @@ MainWindow::MainWindow(QWidget *parent)
    // fondo();
 
     sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 98,100,400);
+
+    sprite_prota->setScale(0.8);
     scene->addItem(sprite_prota);  // Agregar el sprite a la escena    
     sprite_prota->setPos(100,400);
 
     sprite_enemy_rifle = new sprite(":/soldado_rifle.png", 0, 110, 85, 110,1000,400);
+
+    sprite_enemy_rifle->setScale(0.8);
     scene->addItem(sprite_enemy_rifle);  // Agregar el sprite a la escena
     sprite_enemy_rifle->setPos(1000,400);
 
@@ -108,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
         obstacleItem = new QGraphicsPixmapItem(obstacles[i]);
         // Configurar la posición y escala
         obstacleItem->setScale(2.5);
-        obstacleItem->setPos(numRandom(600,1000),numRandom(300,660));  // Mover la posición para que no se superpongan
+        obstacleItem->setPos(700,300+180*i);  // Mover la posición para que no se superpongan
         scene->addItem(obstacleItem);
         obstacleItems.push_back(obstacleItem);
     }
@@ -162,7 +166,7 @@ void MainWindow::rechargeProta(){
 
 }
 
-void MainWindow::shootProta(prota *prot)
+/*void MainWindow::shootProta(prota *prot)
 {
     t_prota_shoot = new QTimer(this);
     sprite_prota->setAttributes(100,120,4);
@@ -197,7 +201,7 @@ void MainWindow::shootProta(prota *prot)
     timer_bullets[prot->getCont_bullets()]->start(40);
 
 
-}
+}*/
 
 //enemy
 
@@ -259,31 +263,6 @@ void MainWindow::moveAndShootEnemy(enemy *ene) {
 
     t_enemy_move->start(100);
 }
-
-void MainWindow::collision(int i){
-
-    QPointF pos=obstacleItems[i]->pos();
-
-    qreal x1 = pos.x(); // Coordenada x
-    qreal y1 = pos.y(); // Coordenada y
-
-    qreal x2=x1+50; //50 pixeles que es el largo y ancho de la imagen
-    qreal y2=y1+50;
-
-
-
-
-
-
-
-
-
-
-}
-
-
-
-
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
 
@@ -481,7 +460,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
     case Qt::Key_Return:
 
-        shootProta(marco);
+       // shootProta(marco);
+
+        bullet();
 
         break;
 
@@ -492,5 +473,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 }
 
+
+void MainWindow::bullet(){
+
+
+    sprite_bullet=new sprite(":bala_1.png", 0, 0, 100, 50, 400, 400);
+
+    sprite_bullet->setPos(sprite_prota->pos());
+
+    scene->addItem(sprite_bullet);
+
+    bullet_timer = new QTimer(this);
+
+    connect(bullet_timer, &QTimer::timeout, [=]() {
+
+        sprite_bullet->moveImage(10,0);
+    });
+
+    bullet_timer ->start(50);
+}
 
 
