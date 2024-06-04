@@ -16,7 +16,7 @@ private:
     sprite *sprite_prota;
     QPixmap *movimiento_prota;
     QGraphicsPixmapItem *mov_prota;
-    int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13;
+    int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13, animation_counter_4 = 25;
     double y_inicial_ = 0, x_inicial_ = 0, t = 0;
 
 
@@ -37,11 +37,12 @@ public:
 
     void mover_derecha();
     void mover_izquierda();
-    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace);
+    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar);
+    void firme(QTimer *timerFirme);
 
     QPixmap *get_movimiento_prota();
     QGraphicsPixmapItem *get_mov_prota();
-
+    void set_animation_counter_3();
 };
 
 

@@ -35,3 +35,5 @@ RESOURCES += \
     background.qrc \
     imagenes-nivel-2.qrc \
     sprites.qrc
+
+
