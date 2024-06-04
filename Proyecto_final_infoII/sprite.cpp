@@ -32,14 +32,14 @@ sprite::sprite()
     setPixmap(explosion_2);
     game_over.load(":/nivel-2/Imagenes nivel 2/game_over.jpg");
     setPixmap(game_over);
-    helices.load(":/nivel-2/Imagenes nivel 2/helices.png");
-    setPixmap(helices);
+    time.load(":/nivel-2/Imagenes nivel 2/tiempo.png");
+    setPixmap(time);
     helicoptero_amigo.load(":/nivel-2/Imagenes nivel 2/helicoptero-amigo-Photoroom.png-Photoroom.png");
     setPixmap(helicoptero_amigo);
     helicoptero_enemigo.load(":/nivel-2/Imagenes nivel 2/helicoptero-enemigo.png");
     setPixmap(helicoptero_enemigo);
-    lanzamisil.load(":/nivel-2/Imagenes nivel 2/Lanzamisil.png");
-    setPixmap(lanzamisil);
+    numeros.load(":/nivel-2/Imagenes nivel 2/numeros.png");
+    setPixmap(numeros);
     llantas.load(":/nivel-2/Imagenes nivel 2/llanta.png");
     setPixmap(llantas);
     misiles.load(":/nivel-2/Imagenes nivel 2/misiles.png");
@@ -62,6 +62,9 @@ sprite::sprite()
     setPixmap(muerte);
     firme.load(":/nivel-2/Imagenes nivel 2/firme.png");
     setPixmap(firme);
+    punto.load(":/nivel-2/Imagenes nivel 2/puntos.png");
+    setPixmap(punto);
+
 }
 
 void sprite::moveImage(int dx, int dy) {
@@ -107,7 +110,7 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
 
-    case 6: imagen_seleccionada = helices.copy(0,0,helices.width(),helices.height());
+    case 6: imagen_seleccionada = time.copy(0,0,time.width(),time.height());
         return imagen_seleccionada;
         break;
 
@@ -119,7 +122,7 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
 
-    case 9: imagen_seleccionada = lanzamisil.copy(0,0,lanzamisil.width(),lanzamisil.height());
+    case 9: imagen_seleccionada = numeros.copy(0,0,numeros.width(),numeros.height());
         return imagen_seleccionada;
         break;
 
@@ -149,6 +152,9 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
     case 16: imagen_seleccionada = mensaje.copy(0,0,mensaje.width(), mensaje.height());
         return imagen_seleccionada;
         break;
+    case 17: imagen_seleccionada = punto.copy(0,0,punto.width(), punto.height());
+        return imagen_seleccionada;
+        break;
     }
 }
 
@@ -176,6 +182,9 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
             setPixmap(copy);
             return copy;
         case 6: copy = firme.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 7: copy = numeros.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
     }

@@ -106,7 +106,7 @@ void prota::mover_izquierda()
     mov_prota->setX(mov_prota->x()-velocidad_personaje);
 }
 
-void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion)
+void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar)
 {
     if (!direccion){
         animation_counter_3++;
@@ -131,8 +131,8 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 
             //definir Voy, Vox
 
-            double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
-            double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
+            double Voy = (velocidad_inicial*potenciador)*sin((angulo1*M_PI) / 180.0);
+            double Vox = (velocidad_inicial*potenciador)*cos((angulo1*M_PI) / 180.0);
 
             //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
             double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
@@ -149,6 +149,7 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
                 animation_counter_3 = 13;
                 t = 0;
                 timerSpace->stop();
+                if (potenciador == 3) timerRebotar->stop();
             }
         }
     }
@@ -176,8 +177,8 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 
             //definir Voy, Vox
 
-            double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
-            double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
+            double Voy = (velocidad_inicial*potenciador)*sin((angulo1*M_PI) / 180.0);
+            double Vox = (velocidad_inicial*potenciador)*cos((angulo1*M_PI) / 180.0);
 
             //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
             double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
@@ -194,6 +195,7 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
                 animation_counter_3 = 13;
                 t = 0;
                 timerSpace->stop();
+                if (potenciador == 3) timerRebotar->stop();
             }
         }
     }
@@ -205,8 +207,9 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 void prota::firme(QTimer *timerFirme)
 {
     animation_counter_4++;
+    if (animation_counter_4 >= 25 && animation_counter_4 <= 32)
     mov_prota->setPixmap(movimiento_prota[animation_counter_4]);
-    if (animation_counter_4 == 32) {
+    if (animation_counter_4 == 55) {
         timerFirme->stop();
     }
 }

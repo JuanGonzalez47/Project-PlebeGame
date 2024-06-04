@@ -37,7 +37,7 @@ public:
 
     void mover_derecha();
     void mover_izquierda();
-    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion);
+    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar);
     void firme(QTimer *timerFirme);
 
     QPixmap *get_movimiento_prota();

@@ -26,9 +26,9 @@ enemy::enemy(int _life)
     }
     mov_enemigo = new QGraphicsPixmapItem(movimiento_enemigo[0]);
 
-    //llenar un nuevo arreglo que contenga los misiles
+    //llenar un nuevo arreglo que contenga los misiles y las explosiones
 
-    movimiento_misil = new QPixmap[8];
+    movimiento_misil = new QPixmap[34];
     unsigned int x = 0;
     for (y = 0; y < 8; y++){
         movimiento_misil[y] = sprite_to_cut.set_sprite_for_animation(x,y,5,30,51).scaled(60,130);
@@ -137,6 +137,8 @@ void enemy::seguimiento_mov(QVector2D pos_personaje,QTimer *timerSeguimiento)
     if (distancia(pos_misil, pos_personaje) < 5) {
         timerSeguimiento->stop();
         animation_counter_3 = 0;
+        //activar timer de explosion y muerte del personaje (este misil matara de un solo tiro)
+
     }
 }
 
