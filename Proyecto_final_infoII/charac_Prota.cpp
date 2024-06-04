@@ -13,6 +13,7 @@ void prota::moveUp() {
 
 void prota::moveDown(){
 
+
     sprite_prota->setAttributes(0,110,10);
     moveDownCharacter(sprite_prota);
 

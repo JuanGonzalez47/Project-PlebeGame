@@ -6,9 +6,11 @@
 #include "ui_mainwindow.h"
 #include <qdebug.h>
 #include <QLabel>
+#include <QVector>
 #include <QPixmap>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 int numRandom(int limiteInferior, int limiteSuperior) {
     static bool seeded = false;
@@ -58,23 +60,23 @@ MainWindow::MainWindow(QWidget *parent)
 
    // fondo();
 
-    sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 98,400,400);
+    sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 98,100,400);
     scene->addItem(sprite_prota);  // Agregar el sprite a la escena    
-    sprite_prota->setPos(400,400);
+    sprite_prota->setPos(100,400);
 
-    sprite_enemy_rifle = new sprite(":/soldado_rifle.png", 0, 110, 85, 110,700,400);
+    sprite_enemy_rifle = new sprite(":/soldado_rifle.png", 0, 110, 85, 110,1000,400);
     scene->addItem(sprite_enemy_rifle);  // Agregar el sprite a la escena
-    sprite_enemy_rifle->setPos(700,300);
+    sprite_enemy_rifle->setPos(1000,400);
 
 
-    marco=new prota(400,400,10,10,10,sprite_prota);
+    marco=new prota(100,400,10,10,10,sprite_prota);
 
-    ene=new enemy(700,400,10,10,10,sprite_enemy_rifle);
+    ene=new enemy(1000,400,10,10,10,sprite_enemy_rifle);
 
     moveAndShootEnemy(ene);
 
 
-    sprite_bullet = new sprite*[4];
+   /* sprite_bullet = new sprite*[4];
 
 
     for (int i = 0; i < 4; ++i) {
@@ -89,6 +91,26 @@ MainWindow::MainWindow(QWidget *parent)
 
     for (int i = 0; i < 4; ++i) {
         timer_bullets[i] = new QTimer();
+    }*/
+
+
+    obstacle1.load(":/obstaculo1.png");
+    // obstacle2.load(":/obstaculo2.png");
+
+
+    // Crear una arreglo de 4 pixmaps
+    obstacles = new QPixmap[num_obstacle];
+
+    // Inicializar cada entrada de la matriz con obstacle1
+
+    for (unsigned int i = 0; i < num_obstacle; ++i) {
+        obstacles[i] = obstacle1;
+        obstacleItem = new QGraphicsPixmapItem(obstacles[i]);
+        // Configurar la posición y escala
+        obstacleItem->setScale(2.5);
+        obstacleItem->setPos(numRandom(600,1000),numRandom(300,660));  // Mover la posición para que no se superpongan
+        scene->addItem(obstacleItem);
+        obstacleItems.push_back(obstacleItem);
     }
 
 
@@ -99,26 +121,30 @@ MainWindow::~MainWindow() {
 }
 
 
-void MainWindow::fondo(){
+void MainWindow::setObstacles(){
 
-    QPixmap backgroundImage(":/escena_final2.png");
-    //scene->addPixmap(backgroundImage);
 
-    // Escalar la imagen de fondo (por ejemplo, 3x en X y 2x en Y)
-    QPixmap scaledBackgroundImage = backgroundImage.scaled(
-        backgroundImage.width() * 1.45,
-        backgroundImage.height() * 2,
-        Qt::KeepAspectRatio,
-        Qt::SmoothTransformation);
+    obstacle1.load(":/obstaculo1.png");
+    // obstacle2.load(":/obstaculo2.png");
 
-    // Crear un QGraphicsPixmapItem con la imagen escalada
-    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(scaledBackgroundImage);
+    for (unsigned int i = 0; i < 5; ++i) {
 
-    // Agregar el QGraphicsPixmapItem a la escena
-    scene->addItem(background);
-    background->setPos(0, 170);
+        obstacles[i]=obstacle1;
+    }
+
+    for (int i = 0; i < 4; ++i) {
+
+        obstacleItem = new QGraphicsPixmapItem(obstacles[i]);
+        // Configura la posición y escala
+        obstacleItem->setScale(2.5);
+        obstacleItem->setPos(200, 200);
+        scene->addItem(obstacleItem);
+
+    }
 
 }
+
+
 
 // prota
 void MainWindow::rechargeProta(){
@@ -150,6 +176,8 @@ void MainWindow::shootProta(prota *prot)
 
     t_prota_shoot->start(60);
 
+    prot->setCont_bullets();
+
 
     // Crea un nuevo temporizador para la bala
     timer_bullets[prot->getCont_bullets()] = new QTimer(this);
@@ -165,8 +193,6 @@ void MainWindow::shootProta(prota *prot)
         sprite_bullet[prot->getCont_bullets()]->moveImage(10, 0);
 
     });
-
-    prot->setCont_bullets();
     // Inicia el temporizador de la bala
     timer_bullets[prot->getCont_bullets()]->start(40);
 
@@ -196,6 +222,8 @@ void MainWindow::shootEnemy(enemy *ene){
 
     t_enemy_shoot->start(100);
 }
+
+
 
 
 void MainWindow::moveAndShootEnemy(enemy *ene) {
@@ -232,6 +260,26 @@ void MainWindow::moveAndShootEnemy(enemy *ene) {
     t_enemy_move->start(100);
 }
 
+void MainWindow::collision(int i){
+
+    QPointF pos=obstacleItems[i]->pos();
+
+    qreal x1 = pos.x(); // Coordenada x
+    qreal y1 = pos.y(); // Coordenada y
+
+    qreal x2=x1+50; //50 pixeles que es el largo y ancho de la imagen
+    qreal y2=y1+50;
+
+
+
+
+
+
+
+
+
+
+}
 
 
 
@@ -243,25 +291,187 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     switch(event->key()) {
     case Qt::Key_A:
 
-        marco->moveLeft();
+
+        verify_coli=false;
+
+        cont_obstacle=0;
+
+        while(cont_obstacle<num_obstacle){
+
+            if(sprite_prota->collidesWithItem(obstacleItems[cont_obstacle])){
+
+                verify_coli=true;
+                break;
+            }
+            cont_obstacle++;
+        }
+
+
+
+        if(!verify_coli){
+
+            marco->moveLeft();
+
+        }else{
+            QPointF pos=obstacleItems[cont_obstacle]->pos();
+
+            qreal x1 = pos.x(); // Coordenada y
+
+
+
+            if(sprite_prota->gety()<x1+50){
+                marco->moveLeft();
+
+            }else{
+                sprite_prota->setSprite();
+                marco->moveRihgt();
+
+
+            }
+
+        }
+
 
         break;
     case Qt::Key_D:
 
-       marco->moveRihgt();
+
+
+        verify_coli=false;
+
+        cont_obstacle=0;
+
+        while(cont_obstacle<num_obstacle){
+
+            if(sprite_prota->collidesWithItem(obstacleItems[cont_obstacle])){
+
+                verify_coli=true;
+                break;
+            }
+            cont_obstacle++;
+        }
+
+
+
+        if(!verify_coli){
+
+            marco->moveRihgt();
+
+        }else{
+
+            QPointF pos=obstacleItems[cont_obstacle]->pos();
+
+            qreal x1 = pos.x(); // Coordenada y
+
+
+            if(sprite_prota->getx()>x1){
+                marco->moveRihgt();
+
+            }else{
+                sprite_prota->setSprite();
+                marco->moveLeft();
+
+
+            }
+
+        }
 
         break;
+
+
     case Qt::Key_W:
 
-        marco->moveUp();
+
+
+        verify_coli=false;
+
+        cont_obstacle=0;
+
+        while(cont_obstacle<num_obstacle){
+
+            if(sprite_prota->collidesWithItem(obstacleItems[cont_obstacle])){
+
+                verify_coli=true;
+                break;
+            }
+            cont_obstacle++;
+        }
+
+
+
+        if(!verify_coli){
+
+            marco->moveUp();
+
+        }else{
+            QPointF pos=obstacleItems[cont_obstacle]->pos();
+
+            qreal y1 = pos.y(); // Coordenada y
+
+
+
+            if(sprite_prota->gety()<y1+50){
+                marco->moveUp();
+
+            }else{
+                sprite_prota->setSprite();
+                marco->moveDown();
+
+
+            }
+
+        }
+
+
 
         break;
 
     case Qt::Key_S:
 
-       marco->moveDown();
 
-        break;
+
+        verify_coli=false;
+
+        cont_obstacle=0;
+
+        while(cont_obstacle<num_obstacle){
+
+            if(sprite_prota->collidesWithItem(obstacleItems[cont_obstacle])){
+
+                verify_coli=true;
+                break;
+            }
+            cont_obstacle++;
+        }
+
+
+
+        if(!verify_coli){
+
+            marco->moveDown();
+
+        }else{
+            QPointF pos=obstacleItems[cont_obstacle]->pos();
+
+            qreal y1 = pos.y(); // Coordenada y
+
+
+            if(sprite_prota->gety()>y1){
+                marco->moveDown();
+
+            }else{
+                sprite_prota->setSprite();
+                marco->moveUp();
+
+
+            }
+
+        }
+
+
+
+
+       break;
 
     case Qt::Key_R:
 
@@ -281,5 +491,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     }
 
 }
+
 
 

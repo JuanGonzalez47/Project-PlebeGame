@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>escena_final2.png</file>
+        <file>obstaculo1.png</file>
+        <file>obstaculo2.png</file>
     </qresource>
 </RCC>

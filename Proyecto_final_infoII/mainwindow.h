@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -30,6 +31,22 @@ class MainWindow : public QMainWindow
     sprite **sprite_bullet;
     QTimer ** timer_bullets;
 
+    std::vector<QGraphicsPixmapItem*> obstacleItems;
+
+    QPixmap *obstacles;
+    QPixmap obstacle1;
+    QPixmap obstacle2;
+
+    QPixmap obstacleCopy;
+    QGraphicsPixmapItem* obstacleItem;
+
+    bool verify_coli;
+
+    unsigned int cont_obstacle=0;
+
+    unsigned int num_obstacle=1;
+
+
 
 
 public:
@@ -43,14 +60,15 @@ public:
     void shootEnemy(enemy *ene);
     void moveAndShootEnemy(enemy *ene);
 
-    void fondo();
+    void collision(int i);
+
+    void resolveCollision(QGraphicsItem* movingItem, QGraphicsItem* staticItem);
+    void setObstacles();
     void keyPressEvent(QKeyEvent *event);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
-
-
 
     QGraphicsScene *scene;
     Ui::MainWindow *ui;
