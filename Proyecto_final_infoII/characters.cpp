@@ -58,10 +58,21 @@ void charac::setSpeed(){
     speed*=-1;
 }
 
+void charac::setLife(int n){
+
+    life-=n;
+
+}
+
 qreal charac::getY(){
 
     return y;
 
+}
+
+int charac::getLife()
+{
+    return life;
 }
 
 int charac::getSpeed(){

@@ -28,7 +28,7 @@ sprite::sprite(){
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
 
-    if(y>=300 && y<=660){
+    if(y>=200 && y<=660){
         y+= dy;
     }else if(y<300){
         y+=5;

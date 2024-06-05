@@ -1,8 +1,12 @@
 # include "charac_enemy.h"
 
-enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,sprite *s_enemy_rifle) : charac (_life,_bullets,_speed, _x,_y){
+enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed, _x,_y){
 
-    sprite_enemy_rifle=s_enemy_rifle;
+
+    sprite_enemy_rifle=new sprite(":/soldado_rifle.png", 0, 110, 85, 110,_x,_y);
+    sprite_enemy_rifle->setScale(0.8);
+    _scene->addItem(sprite_enemy_rifle);  // Agregar el sprite a la escena
+    sprite_enemy_rifle->setPos(_x,_y);
 
 }
 
@@ -58,6 +62,8 @@ void enemy::sumMovran(){
     mov_ran++;
 }
 
+
+
 void enemy::setMovRan(int n){
 
     mov_ran=n;
@@ -79,4 +85,10 @@ int enemy::getN_ran()
 int enemy::getMov_ran()
 {
     return mov_ran;
+}
+
+
+sprite* enemy::getSprite_rifle(){
+
+    return sprite_enemy_rifle;
 }
