@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 //ORGANIZAR SALTO Y MUERTE, FALTA QUE CUANDO EL TIMER LLEGUE A CERO LLEGUE EL HELICOPTERO AMIGO A MATAR AL OTRO, FALTA CUADRAR LOS OTROS MISILES Y QUE ESTOS LE BAJEN UNA VIDA AL PERSONAJE
-//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO
+//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO, FALTA MISIL DEJE DE PERSEGUIR
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -267,8 +267,10 @@ void MainWindow::muerte()
 {
     game_run = false;
     timerStop->start();
-    if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,false,timerMuerte,timerGameOver,timerSpace);
-    else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,true,timerMuerte,timerGameOver,timerSpace);
+    timerSpace->stop();
+    timerRebotar->stop();
+    if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,false,timerMuerte,timerGameOver);
+    else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,true,timerMuerte,timerGameOver);
 }
 
 void MainWindow::stop()

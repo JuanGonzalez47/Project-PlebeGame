@@ -22,5 +22,8 @@
         <file>Imagenes nivel 2/tiempo.png</file>
         <file>Imagenes nivel 2/corazon.png</file>
         <file>Imagenes nivel 2/muerte-mirror.png</file>
+        <file>Imagenes nivel 2/helicoptero-enemigo-mirror.png</file>
+        <file>Imagenes nivel 2/misiles-amigos.png</file>
+        <file>Imagenes nivel 2/misiles-amigos-mirror.png</file>
     </qresource>
 </RCC>

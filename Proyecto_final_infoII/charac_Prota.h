@@ -14,9 +14,9 @@ private:
 
     QGraphicsScene *scene;
     sprite *sprite_prota;
-    QPixmap *movimiento_prota;
-    QGraphicsPixmapItem *mov_prota;
-    int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13, animation_counter_4 = 25;
+    QPixmap *movimiento_prota, *movimiento_avion, *movimiento_misiles_avion;
+    QGraphicsPixmapItem *mov_prota, *mov_avion, *mov_misiles_avion;
+    int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13, animation_counter_4 = 25, animation_counter_5 = 13;
     double y_inicial_ = 0, x_inicial_ = 0, t = 0;
 
 
@@ -38,12 +38,17 @@ public:
     void mover_derecha();
     void mover_izquierda();
     void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar);
-    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver, QTimer *timerSpace);
+    void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver);
     void firme(QTimer *timerFirme);
 
     QPixmap *get_movimiento_prota();
     QGraphicsPixmapItem *get_mov_prota();
+    QPixmap *get_movimiento_avion();
+    QGraphicsPixmapItem *get_mov_avion();
+    QPixmap *get_movimiento_misiles_avion();
+    QGraphicsPixmapItem *get_mov_misiles_avion();
     void set_animation_counter_3();
+    void set_animation_counter_5();
 };
 
 

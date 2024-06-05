@@ -68,6 +68,12 @@ sprite::sprite()
     setPixmap(corazon);
     muerte_mirror.load(":/nivel-2/Imagenes nivel 2/muerte-mirror.png");
     setPixmap(muerte_mirror);
+    helicoptero_enemigo_1.load(":/nivel-2/Imagenes nivel 2/helicoptero-enemigo-mirror.png");
+    setPixmap(helicoptero_enemigo_1);
+    misil_1.load(":/nivel-2/Imagenes nivel 2/misiles-amigos.png");
+    setPixmap(misil_1);
+    misil_2.load(":/nivel-2/Imagenes nivel 2/misiles-amigos-mirror.png");
+    setPixmap(misil_2);
 
 }
 
@@ -168,6 +174,18 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
             setPixmap(copy);
             return copy;
         case 11: copy = muerte_mirror.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 12: copy = helicoptero_enemigo.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 13: copy = helicoptero_enemigo_1.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 14: copy = misil_1.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 15: copy = misil_2.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
     }

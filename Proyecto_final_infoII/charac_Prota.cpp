@@ -53,6 +53,19 @@ prota::prota(int _life)
             cont++;
         }
     }
+    //for para obtener las animaciones del avion
+    movimiento_avion = new QPixmap [18];
+    cont = 0;
+    for (unsigned int x = 0; x < 18; x++){
+        if (x >= 0 && x < 9 ){
+            movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,12,95,60);
+            if(x == 8) cont = 0;
+        }
+        else movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,12,95,60);
+    }
+
+    //for para obtener los misiles de ese avion
+
     mov_prota = new QGraphicsPixmapItem(movimiento_prota[32]);
 }
 
@@ -214,17 +227,16 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 
 }
 
-void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver, QTimer *timerSpace)
+void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver)
 {
-    timerSpace->stop();
     if (!direccion){
-        animation_counter_3++;
+        animation_counter_5++;
         //realizar primero las animaciones de tomar impulso
-        if (animation_counter_3 == 14) mov_prota->setPixmap(movimiento_prota[38]);
+        if (animation_counter_5 == 14) mov_prota->setPixmap(movimiento_prota[38]);
 
         //ahora si realizar el movimiento parabolico
 
-        if(animation_counter_3 >= 16){
+        if(animation_counter_5 >= 16){
 
             t+=0.01;
 
@@ -246,7 +258,7 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_3 >= 1000){
+            if (new_y >= 600 && animation_counter_5 >= 800){
                 mov_prota->setPixmap(movimiento_prota[36]);
                 timerMuerte->stop();
                 gameOver->start();
@@ -254,14 +266,14 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
         }
     }
     else{
-        if (animation_counter_3 == 13 && t == 0) set_animation_counter_3();
-        animation_counter_3--;
+        if (animation_counter_5 == 13 && t == 0) set_animation_counter_3();
+        animation_counter_5--;
         //realizar primero las animaciones de tomar impulso
-        if (animation_counter_3 == 24) mov_prota->setPixmap(movimiento_prota[33]);
+        if (animation_counter_5 == 24) mov_prota->setPixmap(movimiento_prota[33]);
 
         //ahora si realizar el movimiento parabolico
 
-        if(animation_counter_3 <= 22){
+        if(animation_counter_5 <= 22){
             //componente Vx es constante, la componente Vy no, y esta es afectada por la gravedad.
             //los cosenos y los senos en las formulas salen de la descomposicion vectorial
             //ecuaciones para regir el movimiento: Vx = Vox = Vo*cos(angulo), Vy = Voy - g*t, siendo Voy = Vo*sen(angulo)
@@ -288,7 +300,7 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_3 <= -1000){
+            if (new_y >= 600 && animation_counter_5 <= -1000){
                 mov_prota->setPixmap(movimiento_prota[35]);
                 timerMuerte->stop();
                 gameOver->start();
@@ -319,9 +331,35 @@ QGraphicsPixmapItem *prota::get_mov_prota()
     return mov_prota;
 }
 
+QPixmap *prota::get_movimiento_avion()
+{
+    return movimiento_avion;
+}
+
+QGraphicsPixmapItem *prota::get_mov_avion()
+{
+    return mov_avion;
+}
+
+QPixmap *prota::get_movimiento_misiles_avion()
+{
+    return movimiento_misiles_avion;
+}
+
+QGraphicsPixmapItem *prota::get_mov_misiles_avion()
+{
+    return mov_misiles_avion;
+}
+
 void prota::set_animation_counter_3()
 {
     animation_counter_3 = 25;
+}
+
+void prota::set_animation_counter_5()
+{
+    animation_counter_5 = 25;
+
 }
 
 
