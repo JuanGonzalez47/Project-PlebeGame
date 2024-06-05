@@ -23,6 +23,8 @@ public:
     void moveRihgt();
     void moveLeft();
 
+    void throwGrenade();
+
 
     void shoot();
     void dead();

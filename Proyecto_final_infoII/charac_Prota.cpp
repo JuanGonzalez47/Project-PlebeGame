@@ -31,6 +31,12 @@ void prota::moveLeft(){
     moveLeftCharacter(sprite_prota);
 }
 
+void prota::throwGrenade(){
+
+
+
+}
+
 void prota::shoot(){
 
     methodCharacter(sprite_prota);

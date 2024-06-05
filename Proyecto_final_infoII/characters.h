@@ -25,9 +25,13 @@ public:
     void moveDownCharacter(sprite *move);
     void moveLeftCharacter(sprite *move);
     void moveRightCharacter(sprite *move);
+
     void setSpeed();
+    void setLife(int n);
+
     qreal getY();
     int getSpeed();
+    int getLife();
 
 };
 
