@@ -24,13 +24,13 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QGraphicsScene *escena_nivel_2, *pantalla_carga, *game_over;
-    QPixmap *numeros;
+    QPixmap *numeros, corazon;
     sprite sprite_aux;
-    QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *time, *puntos, **numero_n;
+    QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *time, *puntos, **numero_n, **corazon_n, *game_over_;
     prota walter;
     enemy nazi;
-    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador;
-    bool isDKeyPressed = false, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false;
+    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar;
+    bool isDKeyPressed = false, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true;
     int tiempo_restante = 120;
 
 public:
@@ -48,6 +48,11 @@ public:
     void set_temporizador();
     void set_arreglo_numeros();
     void temporizador();
+    void explosion();
+    void muerte();
+    void stop();
+    void gameOver();
+    void finalizarJuego();
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

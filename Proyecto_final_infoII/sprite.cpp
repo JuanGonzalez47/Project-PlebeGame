@@ -64,6 +64,10 @@ sprite::sprite()
     setPixmap(firme);
     punto.load(":/nivel-2/Imagenes nivel 2/puntos.png");
     setPixmap(punto);
+    corazon.load(":/nivel-2/Imagenes nivel 2/corazon.png");
+    setPixmap(corazon);
+    muerte_mirror.load(":/nivel-2/Imagenes nivel 2/muerte-mirror.png");
+    setPixmap(muerte_mirror);
 
 }
 
@@ -98,14 +102,6 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
 
-    case 3: imagen_seleccionada = explosion_1.copy(0,0,explosion_1.width(),explosion_1.height());
-        return imagen_seleccionada;
-        break;
-
-    case 4: imagen_seleccionada = explosion_2.copy(0,0,explosion_2.width(),explosion_2.height());
-        return imagen_seleccionada;
-        break;
-
     case 5: imagen_seleccionada = game_over.copy(0,0,game_over.width(),game_over.height());
         return imagen_seleccionada;
         break;
@@ -114,35 +110,7 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
 
-    case 7: imagen_seleccionada = helicoptero_enemigo.copy(0,0,helicoptero_enemigo.width(),helicoptero_enemigo.height());
-        return imagen_seleccionada;
-        break;
-
-    case 8: imagen_seleccionada = helicoptero_amigo.copy(0,0,helicoptero_amigo.width(),helicoptero_amigo.height());
-        return imagen_seleccionada;
-        break;
-
-    case 9: imagen_seleccionada = numeros.copy(0,0,numeros.width(),numeros.height());
-        return imagen_seleccionada;
-        break;
-
     case 10: imagen_seleccionada = llantas.copy(0,0,llantas.width(),llantas.height());
-        return imagen_seleccionada;
-        break;
-
-    case 11: imagen_seleccionada = misiles.copy(0,0,misiles.width(),misiles.height());
-        return imagen_seleccionada;
-        break;
-
-    case 12: imagen_seleccionada = personaje_principal_mov_l.copy(0,0,personaje_principal_mov_l.width(),personaje_principal_mov_l.height());
-        return imagen_seleccionada;
-        break;
-
-    case 13: imagen_seleccionada = personaje_principal_mov_r.copy(0,0,personaje_principal_mov_r.width(),personaje_principal_mov_r.height());
-        return imagen_seleccionada;
-        break;
-
-    case 14: imagen_seleccionada = sangre.copy(0,0,sangre.width(),sangre.height());
         return imagen_seleccionada;
         break;
 
@@ -153,6 +121,9 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
     case 17: imagen_seleccionada = punto.copy(0,0,punto.width(), punto.height());
+        return imagen_seleccionada;
+        break;
+    case 18: imagen_seleccionada = corazon.copy(0,0,corazon.width(), corazon.height());
         return imagen_seleccionada;
         break;
     }
@@ -185,6 +156,18 @@ QPixmap sprite::set_sprite_for_animation(unsigned int pos_x,unsigned int pos_y, 
             setPixmap(copy);
             return copy;
         case 7: copy = numeros.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 8: copy = explosion_1.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 9: copy = explosion_2.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 10: copy = muerte.copy(pos_x*width,pos_y*height,width,height);
+            setPixmap(copy);
+            return copy;
+        case 11: copy = muerte_mirror.copy(pos_x*width,pos_y*height,width,height);
             setPixmap(copy);
             return copy;
     }

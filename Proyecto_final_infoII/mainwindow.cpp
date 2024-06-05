@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+//ORGANIZAR SALTO Y MUERTE, FALTA QUE CUANDO EL TIMER LLEGUE A CERO LLEGUE EL HELICOPTERO AMIGO A MATAR AL OTRO, FALTA CUADRAR LOS OTROS MISILES Y QUE ESTOS LE BAJEN UNA VIDA AL PERSONAJE
+//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -10,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     ui->setupUi(this);
+
 
     if (true){ //agregar una condicion que se cumpla solo cuando pase el primer nivel
         //bloquear teclas de movimiento, w s (desactivar las otras)
@@ -61,65 +65,6 @@ void MainWindow::set_mensaje()
     paint(1100,0,0,mensaje,escena_nivel_2);
 }
 
-//recordar bloquear los keys W Y S para el segundo nivel
-
-void MainWindow::keyPressEvent(QKeyEvent *event){
-
-    if (event->isAutoRepeat())return;
-
-    //reiniciar el estado de la variable para activar el space
-
-    if (!timerSpace->isActive() && !timerRebotar->isActive()){
-        spacePressed = true;
-        validKey_move  = true;
-    }
-    if (!timerFirme->isActive() && valid){
-        validKey_move_ = true;
-        escena_nivel_2->removeItem(mensaje);
-    }
-
-    //Manejo del evento de tecla
-    switch(event->key()) {
-    case Qt::Key_A:
-        if (!isAKeyPressed && validKey_move && validKey) {
-            isAKeyPressed = true;
-            TeclaPressedA = true;
-            handleAKey();
-            timerA->start();
-        }
-        break;
-    case Qt::Key_D:
-        if (!isDKeyPressed && validKey_move && validKey) {
-            isDKeyPressed = true;
-            TeclaPressedA = false;
-            handleDKey();
-            timerD->start();
-            iniciar_firme();
-        }
-        break;
-    case Qt::Key_W:
-        if (validKey){
-        }
-
-        break;
-
-    case Qt::Key_S:
-        if (validKey){
-        }
-        break;
-    case Qt::Key_Space:
-        if (spacePressed && validKey_move && validKey){
-            SpaceKey();
-            timerSpace->start();
-            spacePressed = false;
-            validKey_move  = false;
-        }
-        break;
-    }
-
-
-}
-
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->isAutoRepeat()) return;
     if (event->key() == Qt::Key_D) {
@@ -151,6 +96,7 @@ void MainWindow::SpaceKey()
 {
     reproducir_animacion = false;
     reproducir_animacion_ = false;
+    valid = false;
     timerRebotar->start();
     if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,true,2,timerRebotar);
     else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,false,2,timerRebotar);
@@ -190,7 +136,7 @@ void MainWindow::misil()
 {
     unsigned int pos_x = nazi.get_mov_enemigo()->x() + 40;
     unsigned int pos_y = nazi.get_mov_enemigo()->y() + 120;
-    paint(pos_x,pos_y,0,nazi.get_mov_misil(),escena_nivel_2);
+    paint(pos_x,pos_y,1,nazi.get_mov_misil(),escena_nivel_2);
     timerMisil->stop();
     timerMisil_circular->start();
 }
@@ -203,7 +149,7 @@ void MainWindow::circular()
 void MainWindow::seguimiento()
 {
     QVector2D pos_personaje(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
-    nazi.seguimiento_mov(pos_personaje,timerSeguimiento);
+    nazi.seguimiento_mov(pos_personaje,timerSeguimiento,timerExplosion,timerMuerte);
 }
 
 void MainWindow::firme()
@@ -218,7 +164,7 @@ void MainWindow::iniciar_firme()
             set_mensaje();
             escena_nivel_2->removeItem(telefono);
             timerFirme->start();
-            validKey_move_ = false;
+            validKey_move = false;
             telefonoExist = false;
             valid = true;
             //agregar a la escena el conteo (disparo del timer y setar en las posiciones los dos puntos y el time)
@@ -257,8 +203,11 @@ void MainWindow::set_temporizador()
 
 void MainWindow::set_arreglo_numeros()
 {
+    put_corazones = true;
     numeros = new QPixmap [10];
+    corazon = sprite_aux.SetSprite(18);
     numero_n = new QGraphicsPixmapItem*[4];
+    corazon_n = new QGraphicsPixmapItem*[5];
     for (unsigned int x = 0; x < 10; x++) {
         numeros[x] = sprite_aux.set_sprite_for_animation(x,0,7,47,72);
     }
@@ -271,6 +220,21 @@ void MainWindow::set_arreglo_numeros()
     paint(146,18,0,numero_n[1],escena_nivel_2);
     paint(192,18,0,numero_n[2],escena_nivel_2);
     paint(220,18,0,numero_n[3],escena_nivel_2);
+
+    //agregar los corazones de la vida en la escena
+
+    corazon_n[0] = new QGraphicsPixmapItem(corazon.scaled(35,35));
+    corazon_n[1] = new QGraphicsPixmapItem(corazon.scaled(35,35));
+    corazon_n[2] = new QGraphicsPixmapItem(corazon.scaled(35,35));
+    corazon_n[3] = new QGraphicsPixmapItem(corazon.scaled(35,35));
+    corazon_n[4] = new QGraphicsPixmapItem(corazon.scaled(35,35));
+
+    paint(10,60,0,corazon_n[0],escena_nivel_2);
+    paint(50,60,0,corazon_n[1],escena_nivel_2);
+    paint(90,60,0,corazon_n[2],escena_nivel_2);
+    paint(130,60,0,corazon_n[3],escena_nivel_2);
+    paint(170,60,0,corazon_n[4],escena_nivel_2);
+
 }
 
 void MainWindow::temporizador()
@@ -293,6 +257,93 @@ void MainWindow::temporizador()
     }
 }
 
+void MainWindow::explosion()
+{
+    valid_delete = true;
+    nazi.explosion(timerExplosion);
+}
+
+void MainWindow::muerte()
+{
+    game_run = false;
+    timerStop->start();
+    if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,false,timerMuerte,timerGameOver,timerSpace);
+    else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,true,timerMuerte,timerGameOver,timerSpace);
+}
+
+void MainWindow::stop()
+{
+    if (put_corazones){
+        escena_nivel_2->removeItem(corazon_n[0]);
+        escena_nivel_2->removeItem(corazon_n[1]);
+        escena_nivel_2->removeItem(corazon_n[2]);
+        escena_nivel_2->removeItem(corazon_n[3]);
+        escena_nivel_2->removeItem(corazon_n[4]);
+        timerTemporizador->stop();
+        timerStop->stop();
+    }
+}
+
+
+
+void MainWindow::keyPressEvent(QKeyEvent *event){
+
+    if (game_run){
+        if (event->isAutoRepeat())return;
+
+        if (!timerExplosion->isActive() && valid_delete) escena_nivel_2->removeItem(nazi.get_mov_misil());
+
+        if (!timerSpace->isActive() && !timerRebotar->isActive() && !timerFirme->isActive()){
+            spacePressed = true;
+            validKey_move  = true;
+        }
+        if (!timerFirme->isActive() && valid){
+            validKey_move = true;
+            escena_nivel_2->removeItem(mensaje);
+        }
+
+        //Manejo del evento de tecla
+        switch(event->key()) {
+        case Qt::Key_A:
+            if (!isAKeyPressed && validKey_move && validKey) {
+                isAKeyPressed = true;
+                TeclaPressedA = true;
+                handleAKey();
+                timerA->start();
+            }
+            break;
+        case Qt::Key_D:
+            if (!isDKeyPressed && validKey_move && validKey) {
+                isDKeyPressed = true;
+                TeclaPressedA = false;
+                handleDKey();
+                timerD->start();
+                iniciar_firme();
+            }
+            break;
+        case Qt::Key_W:
+            if (validKey){
+            }
+
+            break;
+
+        case Qt::Key_S:
+            if (validKey){
+            }
+            break;
+        case Qt::Key_Space:
+            if (spacePressed && validKey_move && validKey){
+                SpaceKey();
+                timerSpace->start();
+                spacePressed = false;
+                validKey_move  = false;
+            }
+            break;
+        }
+    }
+
+}
+
 void MainWindow::set_pantalla_carga()
 {
     pantalla_carga = new QGraphicsScene(this);
@@ -304,6 +355,22 @@ void MainWindow::set_pantalla_carga()
     //seteo de todos los timers
     set_timers();
     timerPantalla->start();
+}
+
+void MainWindow::gameOver()
+{
+    game_over = new QGraphicsScene(this);
+    ui->graphicsView->setFixedSize(size_screen_w, size_screen_h);
+    game_over->setSceneRect(0, 0, size_screen_w - 5, size_screen_h - 5);
+    ui->graphicsView->setScene(game_over);
+    game_over_ = new QGraphicsPixmapItem(sprite_aux.SetSprite(5).scaled(ui->graphicsView->width(),ui->graphicsView->height()));
+    paint(0,0,0,game_over_,game_over);
+    timerFinalizar->start();
+}
+
+void MainWindow::finalizarJuego()
+{
+    exit(EXIT_SUCCESS);
 }
 
 void MainWindow::set_window()
@@ -347,6 +414,18 @@ void MainWindow::set_timers()
     timerRebotar = new QTimer(this);
     timerPantalla = new QTimer(this);
     timerTemporizador = new QTimer(this);
+    timerExplosion = new QTimer(this);
+    timerMuerte = new QTimer(this);
+    timerGameOver = new QTimer(this);
+    timerStop = new QTimer(this);
+    timerFinalizar = new QTimer(this);
+
+
+    timerFinalizar->setInterval(1000);
+    timerGameOver->setInterval(1000);
+    timerStop->setInterval(1);
+    timerMuerte->setInterval(1);
+    timerExplosion->setInterval(16);
     timerTemporizador->setInterval(1000);
     timerPantalla->setInterval(5000);
     timerPantalla->setInterval(5000);
@@ -361,6 +440,13 @@ void MainWindow::set_timers()
     timerD->setInterval(100);
     timerMisil_circular->setInterval(1);
     timerMisil->setInterval(10);
+
+
+    connect(timerFinalizar, &QTimer::timeout, this, &MainWindow::finalizarJuego);
+    connect(timerStop, &QTimer::timeout, this, &MainWindow::stop);
+    connect(timerGameOver, &QTimer::timeout, this, &MainWindow::gameOver);
+    connect(timerMuerte, &QTimer::timeout, this, &MainWindow::muerte);
+    connect(timerExplosion, &QTimer::timeout, this, &MainWindow::explosion);
     connect(timerTemporizador, &QTimer::timeout, this, &MainWindow::temporizador);
     connect(timerPantalla, &QTimer::timeout, this, &MainWindow::set_window);
     connect(timerRebotar, &QTimer::timeout, this, &MainWindow::rebotar);

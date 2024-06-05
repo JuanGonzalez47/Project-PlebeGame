@@ -14,9 +14,9 @@ prota::prota(int _life)
     sprite sprite_to_cut;
     //constructor para el sprite del protagonista del nivel_2
     //for para las animaciones de movimiento y muerte
-    movimiento_prota = new QPixmap[33];
+    movimiento_prota = new QPixmap[39];
     unsigned int cont = 0;
-    for (unsigned int x = 0; x < 33; x++){
+    for (unsigned int x = 0; x < 39; x++){
         if (x < 7) movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(x,0,0,132,162);
         else if (x >= 7 && x < 14){
             movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,1,132,162);
@@ -39,11 +39,21 @@ prota::prota(int _life)
             if (x == 25) cont = 0;
         }
         else if (x >= 26 && x < 33){
-            movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,6,120,186).scaled(130,192);
+            movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,6,120,186);
+            cont++;
+            if(x == 32) cont = 0;
+        }
+        else if(x >= 33 && x < 36){
+            movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,10,177,172);
+            cont++;
+            if(x == 35) cont = 0;
+        }
+        else{
+            movimiento_prota[x] = sprite_to_cut.set_sprite_for_animation(cont,0,11,179,172);
             cont++;
         }
     }
-    mov_prota = new QGraphicsPixmapItem(movimiento_prota[31]);
+    mov_prota = new QGraphicsPixmapItem(movimiento_prota[32]);
 }
 
 prota::prota()
@@ -201,6 +211,90 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
     }
 
 
+
+}
+
+void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver, QTimer *timerSpace)
+{
+    timerSpace->stop();
+    if (!direccion){
+        animation_counter_3++;
+        //realizar primero las animaciones de tomar impulso
+        if (animation_counter_3 == 14) mov_prota->setPixmap(movimiento_prota[38]);
+
+        //ahora si realizar el movimiento parabolico
+
+        if(animation_counter_3 >= 16){
+
+            t+=0.01;
+
+            if (t == 0.01 ){
+                y_inicial_ = y_inicial;
+                x_inicial_ = x_inicial;
+            }
+
+            //definir Voy, Vox
+
+            double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
+            double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
+
+            //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
+            double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
+            double new_x = x_inicial_ + Vox*t;
+
+            mov_prota->setPixmap(movimiento_prota[37]);
+            mov_prota->setX(new_x);
+            mov_prota->setY(new_y);
+
+            if (new_y >= 600 && animation_counter_3 >= 1000){
+                mov_prota->setPixmap(movimiento_prota[36]);
+                timerMuerte->stop();
+                gameOver->start();
+            }
+        }
+    }
+    else{
+        if (animation_counter_3 == 13 && t == 0) set_animation_counter_3();
+        animation_counter_3--;
+        //realizar primero las animaciones de tomar impulso
+        if (animation_counter_3 == 24) mov_prota->setPixmap(movimiento_prota[33]);
+
+        //ahora si realizar el movimiento parabolico
+
+        if(animation_counter_3 <= 22){
+            //componente Vx es constante, la componente Vy no, y esta es afectada por la gravedad.
+            //los cosenos y los senos en las formulas salen de la descomposicion vectorial
+            //ecuaciones para regir el movimiento: Vx = Vox = Vo*cos(angulo), Vy = Voy - g*t, siendo Voy = Vo*sen(angulo)
+            //ecuaciones para regir la posicion en x y y, x = xo + vox*t (ecuacion MRU) no hay aceleracion, en Y (MRUA) y = yo + voy*t - 1/2*g*t^2.
+
+            //sumarle al tiempo para actualizar posicion y al contador de la animacion
+            t+=0.01;
+
+            if (t == 0.01 ){
+                y_inicial_ = y_inicial;
+                x_inicial_ = x_inicial;
+            }
+
+            //definir Voy, Vox
+
+            double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
+            double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
+
+            //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
+            double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
+            double new_x = x_inicial_ - Vox*t;
+
+            mov_prota->setPixmap(movimiento_prota[34]);
+            mov_prota->setX(new_x);
+            mov_prota->setY(new_y);
+
+            if (new_y >= 600 && animation_counter_3 <= -1000){
+                mov_prota->setPixmap(movimiento_prota[35]);
+                timerMuerte->stop();
+                gameOver->start();
+            }
+        }
+    }
 
 }
 

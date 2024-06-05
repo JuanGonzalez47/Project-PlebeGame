@@ -10,8 +10,6 @@ enemy::enemy(int _life)
 {
     set_life(_life);
     sprite sprite_to_cut;
-    //constructor para el sprite del protagonista del nivel_2
-    //for para las animaciones de movimiento y muerte
     movimiento_enemigo = new QPixmap[12];
     unsigned int cont = 0;
     unsigned int y = 0;
@@ -28,34 +26,30 @@ enemy::enemy(int _life)
 
     //llenar un nuevo arreglo que contenga los misiles y las explosiones
 
-    movimiento_misil = new QPixmap[34];
+    movimiento_misil = new QPixmap[30];
     unsigned int x = 0;
     for (y = 0; y < 8; y++){
         movimiento_misil[y] = sprite_to_cut.set_sprite_for_animation(x,y,5,30,51).scaled(60,130);
     }
+    y = 0;
+    cont = 0;
+    for(x = 8; x < 29; x++){
+        if (x >= 8 && x < 20){
+            movimiento_misil[x] = sprite_to_cut.set_sprite_for_animation(cont,y,8,55,105).scaled(150,250);
+            cont++;
+            if (x == 19) cont = 0;
+        }
+        else {
+            movimiento_misil[x] = sprite_to_cut.set_sprite_for_animation(cont,y,9,50,111).scaled(150,250);
+            cont++;
+        }
+    }
     mov_misil = new QGraphicsPixmapItem(movimiento_misil[0]);
 
+
 }
 
-QPixmap *enemy::get_movimiento_enemigo()
-{
-    return movimiento_enemigo;
-}
 
-QGraphicsPixmapItem *enemy::get_mov_enemigo()
-{
-    return mov_enemigo;
-}
-
-QGraphicsPixmapItem *enemy::get_mov_misil()
-{
-    return mov_misil;
-}
-
-QPixmap *enemy::get_movimiento_misil()
-{
-    return movimiento_misil;
-}
 
 void enemy::pendulo_simple(double x_inicial, double y_inicial, QTimer *timerPendulo, QTimer *timerMovimientoRecto, QTimer *timerIniciarPendulo, QTimer *timerMisil)
 {
@@ -121,7 +115,7 @@ void enemy::Movimiento_recto()
     }
 }
 
-void enemy::seguimiento_mov(QVector2D pos_personaje,QTimer *timerSeguimiento)
+void enemy::seguimiento_mov(QVector2D pos_personaje,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte)
 {
     animation_counter_3++;
     QVector2D pos_misil(mov_misil->pos().x(), mov_misil->pos().y());
@@ -134,12 +128,18 @@ void enemy::seguimiento_mov(QVector2D pos_personaje,QTimer *timerSeguimiento)
     mov_misil->setX(pos_misil.x());
     mov_misil->setY(pos_misil.y());
 
-    if (distancia(pos_misil, pos_personaje) < 5) {
-        timerSeguimiento->stop();
+    if (distancia(pos_misil, pos_personaje) < 7) {
         animation_counter_3 = 0;
-        //activar timer de explosion y muerte del personaje (este misil matara de un solo tiro)
-
+        mov_misil->setY(pos_personaje.y() - 100);
+        timerExplosion->start();
+        timerMuerte->start();
+        timerSeguimiento->stop();
     }
+}
+
+double enemy::distancia(QVector2D vector1, QVector2D vector2)
+{
+    return (vector1 - vector2).length();
 }
 
 void enemy::animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo)
@@ -153,9 +153,15 @@ void enemy::animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo
     }
 }
 
-double enemy::distancia(QVector2D vector1, QVector2D vector2)
+
+void enemy::explosion(QTimer *timerExplosion)
 {
-    return (vector1 - vector2).length();
+    animation_counter_4++;
+    mov_misil->setPixmap(movimiento_misil[animation_counter_4]);
+    if (animation_counter_4 == 29){
+        animation_counter_4 = 7;
+        timerExplosion->stop();
+    }
 }
 
 
@@ -190,10 +196,29 @@ void enemy::movimiento_cirular(QTimer *timerMisil_circular, double x_inicial, do
         counter = 0;
     }
 
-
 }
 
 double enemy::aceleracion_angular(double theta)
 {
     return -(g / longitud) * sin(theta); //se despeja basicamente de la ecuacion diferencial que coloque arriba
+}
+
+QPixmap *enemy::get_movimiento_enemigo()
+{
+    return movimiento_enemigo;
+}
+
+QGraphicsPixmapItem *enemy::get_mov_enemigo()
+{
+    return mov_enemigo;
+}
+
+QGraphicsPixmapItem *enemy::get_mov_misil()
+{
+    return mov_misil;
+}
+
+QPixmap *enemy::get_movimiento_misil()
+{
+    return movimiento_misil;
 }

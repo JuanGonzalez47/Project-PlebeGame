@@ -7,7 +7,6 @@
         <file>Imagenes nivel 2/helicoptero-amigo-Photoroom.png-Photoroom.png</file>
         <file>Imagenes nivel 2/llanta.png</file>
         <file>Imagenes nivel 2/misiles.png</file>
-        <file>Imagenes nivel 2/Sangre.png</file>
         <file>Imagenes nivel 2/telefono.png</file>
         <file>Imagenes nivel 2/Texto.png</file>
         <file>Imagenes nivel 2/pantalla-carga.png</file>
@@ -21,5 +20,7 @@
         <file>Imagenes nivel 2/numeros.png</file>
         <file>Imagenes nivel 2/puntos.png</file>
         <file>Imagenes nivel 2/tiempo.png</file>
+        <file>Imagenes nivel 2/corazon.png</file>
+        <file>Imagenes nivel 2/muerte-mirror.png</file>
     </qresource>
 </RCC>

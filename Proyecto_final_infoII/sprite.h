@@ -19,7 +19,7 @@ public:
 private:
     qreal x;
     qreal y;
-    QPixmap spriteSheet, fondo_nivel_2, pantalla_carga_nivel_2, personaje_principal_mov_r, personaje_principal_mov_l, helicoptero_enemigo, helicoptero_amigo, telefono, llantas, sangre, misiles, numeros, time, explosion_1, explosion_2, game_over, mensaje, salto_D, salto_I, muerte, firme, punto;
+    QPixmap spriteSheet, fondo_nivel_2, pantalla_carga_nivel_2, personaje_principal_mov_r, personaje_principal_mov_l, helicoptero_enemigo, helicoptero_amigo, telefono, llantas, sangre, misiles, numeros, time, explosion_1, explosion_2, game_over, mensaje, salto_D, salto_I, muerte, muerte_mirror, firme, punto, corazon;
     QPixmap sprit,copy;
     int sprite_x;
     int sprite_y;
