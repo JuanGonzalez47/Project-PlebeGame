@@ -95,30 +95,48 @@ void enemy::pendulo_simple(double x_inicial, double y_inicial, QTimer *timerPend
 
 }
 
-void enemy::Movimiento_recto(QTimer *timerMisil_recto)
+void enemy::Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop)
 {
-    bool valid = false;
-    animation_counter_2++;
-    if ((mov_enemigo->x())/2 > size_screen_w) valid = true;
-
-    if (animation_counter_2 == 6) animation_counter_2 = 0;
-    mov_enemigo->setPixmap(movimiento_enemigo[animation_counter_2]);
-    if(valid_move_left){
-        mov_enemigo->setX(mov_enemigo->x()-velocidad_helicoptero);
-        if (mov_enemigo->x() <= 100){
-            if (valid)  timerMisil_recto->start();
+    counter_1++;
+    if (counter_1 == 1){
+        if (direccion){
             valid_move_right = true;
             valid_move_left = false;
         }
-    }
-    else if (valid_move_right){
-        mov_enemigo->setX(mov_enemigo->x() + velocidad_helicoptero);
-        if (mov_enemigo->x() >= size_screen_w - 450) {
-            if (!valid) timerMisil_recto->start();
-            valid_move_left = true;
+        else{
             valid_move_right = false;
+            valid_move_left = true;
         }
     }
+    if (stop){
+        animation_counter_2++;
+        if (animation_counter_2 == 6) animation_counter_2 = 0;
+        mov_enemigo->setPixmap(movimiento_enemigo[animation_counter_2]);
+    }
+    else{
+        bool valid = false;
+        animation_counter_2++;
+        if ((mov_enemigo->x())/2 > size_screen_w) valid = true;
+        if (animation_counter_2 == 6) animation_counter_2 = 0;
+        mov_enemigo->setPixmap(movimiento_enemigo[animation_counter_2]);
+        if(valid_move_left){
+            mov_enemigo->setX(mov_enemigo->x()-velocidad_helicoptero);
+            if (mov_enemigo->x() <= 100){
+                if (valid)  timerMisil_recto->start();
+                valid_move_right = true;
+                valid_move_left = false;
+            }
+        }
+        else if (valid_move_right){
+            mov_enemigo->setX(mov_enemigo->x() + velocidad_helicoptero);
+            if (mov_enemigo->x() >= size_screen_w - 450) {
+                if (!valid) timerMisil_recto->start();
+                valid_move_left = true;
+                valid_move_right = false;
+            }
+        }
+    }
+
 }
 
 void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte)

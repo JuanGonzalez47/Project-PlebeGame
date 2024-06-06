@@ -25,5 +25,6 @@
         <file>Imagenes nivel 2/helicoptero-enemigo-mirror.png</file>
         <file>Imagenes nivel 2/misiles-amigos.png</file>
         <file>Imagenes nivel 2/misiles-amigos-mirror.png</file>
+        <file>Imagenes nivel 2/mensaje_2.png</file>
     </qresource>
 </RCC>

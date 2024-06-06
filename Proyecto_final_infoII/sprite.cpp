@@ -74,6 +74,8 @@ sprite::sprite()
     setPixmap(misil_1);
     misil_2.load(":/nivel-2/Imagenes nivel 2/misiles-amigos-mirror.png");
     setPixmap(misil_2);
+    mensaje_2.load(":/nivel-2/Imagenes nivel 2/mensaje_2.png");
+    setPixmap(mensaje_2);
 
 }
 
@@ -130,6 +132,9 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
     case 18: imagen_seleccionada = corazon.copy(0,0,corazon.width(), corazon.height());
+        return imagen_seleccionada;
+        break;
+    case 19: imagen_seleccionada = mensaje_2.copy(0,0,mensaje_2.width(), mensaje_2.height());
         return imagen_seleccionada;
         break;
     }

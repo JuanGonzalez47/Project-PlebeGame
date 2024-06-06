@@ -1,18 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-//FALTA QUE CUANDO EL TIMER LLEGUE A CERO LLEGUE EL HELICOPTERO AMIGO A MATAR AL OTRO, FALTA CUADRAR LOS OTROS MISILES Y QUE ESTOS LE BAJEN UNA VIDA AL PERSONAJE
-//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO
+//FALTA DISPARAR LOS MISILES PARA MATAR A LOS HELICOPTEROS Y PONER LA PANTALLA DEL FIN DEL JUEGO
 
-//tareas
 
-//1. dejar caer misiles cada cierto tiempo
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     walter(5),
-    nazi(5)
+    avion(value),
+    nazi(5),
+    nazi_1(5)
 
 {
     ui->setupUi(this);
@@ -60,6 +59,13 @@ void MainWindow::set_personaje_principal()
 void MainWindow::set_helicoptero_enemigo()
 {
     paint(600,0,0,nazi.get_mov_enemigo(),escena_nivel_2);
+    paint(600,0,0,nazi_1.get_mov_enemigo(),escena_nivel_2);
+
+}
+
+void MainWindow::set_avion()
+{
+    paint(0,100,1,avion.get_mov_avion(),escena_nivel_2);
 }
 
 void MainWindow::set_mensaje()
@@ -109,11 +115,20 @@ void MainWindow::SpaceKey()
 void MainWindow::pendulo()
 {
     nazi.pendulo_simple(nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo,timerMisil_circular);
+    nazi_1.pendulo_simple(nazi_1.get_mov_enemigo()->x(),nazi_1.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo,timerMisil_circular);
 }
 
 void MainWindow::MovimientoRecto()
 {
-    nazi.Movimiento_recto(timerMisil_recto);
+    if (move_helicoptero){
+        nazi.Movimiento_recto(timerMisil_recto,true,false);
+        nazi_1.Movimiento_recto(timerMisil_recto,false,false);
+    }
+    else{
+        nazi.Movimiento_recto(timerMisil_recto,true,true);
+        nazi_1.Movimiento_recto(timerMisil_recto,false,true);
+    }
+
 }
 
 void MainWindow::iniciar_secuencia()
@@ -133,6 +148,7 @@ void MainWindow::iniciar_pendulo()
 void MainWindow::preparo_disparo()
 {
     nazi.animacion_preparo_disparo(timerPendulo,timerDisparo,timerMisil_recto);
+    nazi_1.animacion_preparo_disparo(timerPendulo,timerDisparo,timerMisil_recto);
 }
 
 void MainWindow::misil()
@@ -140,8 +156,12 @@ void MainWindow::misil()
     valid_delete = false;
     if (valid_put_on_escene_misil){
         nazi.set_mov_misil();
+        nazi_1.set_mov_misil();
         unsigned int pos_x = nazi.get_mov_enemigo()->x() + 40;
         unsigned int pos_y = nazi.get_mov_enemigo()->y() + 120;
+        unsigned int pos_x_ = nazi_1.get_mov_enemigo()->x() + 40;
+        unsigned int pos_y_ = nazi_1.get_mov_enemigo()->y() + 120;
+        paint(pos_x_,pos_y_,1,nazi_1.get_mov_misil(),escena_nivel_2);
         paint(pos_x,pos_y,1,nazi.get_mov_misil(),escena_nivel_2);
     }
 }
@@ -158,6 +178,7 @@ void MainWindow::circular()
 {
     misil();
     nazi.movimiento_cirular(timerMisil_circular,nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerSeguimiento);
+    nazi_1.movimiento_cirular(timerMisil_circular,nazi_1.get_mov_enemigo()->x(),nazi_1.get_mov_enemigo()->y(),timerSeguimiento);
     valid_put_on_escene_misil = false;
 
 }
@@ -167,15 +188,18 @@ void MainWindow::seguimiento()
     if (llanta_derecha){
         QVector2D pos_objeto(llanta_1->x(), llanta_1->y());
         nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
+        nazi_1.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
     }
     else if (llanta_izquierda){
         QVector2D pos_objeto(llanta_2->x(), llanta_2->y());
         nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
+        nazi_1.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
     }
     else{
         walter.set_life(1);
         QVector2D pos_objeto(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
         nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,true);
+        nazi_1.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,true);
     }
 }
 
@@ -221,11 +245,14 @@ void MainWindow::IniciarMovMisil()
 {
     QVector2D pos_objeto(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
     nazi.misil_recto(timerExplosion,pos_objeto,timerMuerte,true);
+    nazi_1.misil_recto(timerExplosion,pos_objeto,timerMuerte,true);
+
 }
 
 void MainWindow::delete_()
 {
    escena_nivel_2->removeItem(nazi.get_mov_misil());
+   escena_nivel_2->removeItem(nazi_1.get_mov_misil());
    valid_put_on_escene_misil = true;
    timerEliminacion->stop();
 }
@@ -290,6 +317,20 @@ void MainWindow::set_corazones()
     }
 }
 
+void MainWindow::set_mensaje_final()
+{
+    game_run = false;
+    move_helicoptero = false;
+    timerTemporizador->stop();
+    timerMovimientoRecto->stop();
+    timerMovimientoRecto->start();
+    timerMisil_recto->stop();
+    timerIniciarPendulo->stop();
+    mensaje_2 = new QGraphicsPixmapItem(sprite_aux.SetSprite(19).scaled(440,440));
+    paint(1100,0,0,mensaje_2,escena_nivel_2);
+    timerFirme->start();
+}
+
 void MainWindow::temporizador()
 {
     if (tiempo_restante > 0){
@@ -305,7 +346,14 @@ void MainWindow::temporizador()
         --tiempo_restante;
     }
     else {
-        timerTemporizador->stop();
+
+        set_mensaje_final();
+        set_avion();
+        timerAvion->start();
+        //pintar avion en pantalla
+
+        //activar timer para realizar la animacion de la muerte de los otros dos helicopteros (activar  un timer que haga la animacion de los helicopteros pero no se mueva)
+
     }
 }
 
@@ -313,6 +361,7 @@ void MainWindow::explosion()
 {
     valid_delete = true;
     nazi.explosion(timerExplosion, timerStartMisil_recto, timerEliminacion);
+    nazi_1.explosion(timerExplosion, timerStartMisil_recto, timerEliminacion);
 }
 
 void MainWindow::muerte()
@@ -425,7 +474,6 @@ void MainWindow::set_pantalla_carga()
     ui->graphicsView->setScene(pantalla_carga);
     pantalla_carga_ = new QGraphicsPixmapItem(sprite_aux.SetSprite(1).scaled(ui->graphicsView->width(),ui->graphicsView->height()));
     paint(0,0,0,pantalla_carga_,pantalla_carga);
-    //seteo de todos los timers
     set_timers();
     timerPantalla->start();
 }
@@ -448,6 +496,26 @@ void MainWindow::finalizarJuego()
     exit(EXIT_SUCCESS);
 }
 
+void MainWindow::IniciarAvion()
+{
+    avion.avion(timerAvion,100,timerMisilesAvion);
+}
+
+void MainWindow::misiles_avion_()
+{
+    //poner los dos misiles en pantalla
+
+    misiles_avion = new QGraphicsPixmapItem*[1];
+    misiles_avion[0] = new QGraphicsPixmapItem(avion.get_mov_misiles_avion());
+    misiles_avion[1] = new QGraphicsPixmapItem(avion.get_mov_misiles_avion());
+
+    paint(avion.get_mov_avion()->x(), avion.get_mov_avion()->y(), 1, misiles_avion[0], escena_nivel_2);
+    paint(avion.get_mov_avion()->x(), avion.get_mov_avion()->y(), 1, misiles_avion[1], escena_nivel_2);
+
+    timerMisilesAvion->stop();
+    //activar timers para la animacion de los misiles y mandarlos a los helicopteros
+}
+
 void MainWindow::set_window()
 {
     escena_nivel_2 = new QGraphicsScene(this);
@@ -455,6 +523,7 @@ void MainWindow::set_window()
     ui->graphicsView->setScene(escena_nivel_2);
     timerPantalla->stop();
     set_nivel_2();
+
 }
 
 void MainWindow::set_nivel_2()
@@ -470,6 +539,13 @@ void MainWindow::set_nivel_2()
     MovimientoRecto();
     timerMovimientoRecto->start();
     iniciar_secuencia();
+
+    misiles_avion = new QGraphicsPixmapItem*[1];
+    misiles_avion[0] = new QGraphicsPixmapItem(avion.get_mov_misiles_avion());
+    //misiles_avion[1] = new QGraphicsPixmapItem(avion.get_mov_misiles_avion());
+
+    paint(0,0,1, misiles_avion[0], escena_nivel_2);
+    //paint(avion.get_mov_avion()->x(), avion.get_mov_avion()->y(), 1, misiles_avion[1], escena_nivel_2);
 }
 
 
@@ -496,8 +572,12 @@ void MainWindow::set_timers()
     timerMisil_recto = new QTimer(this);
     timerStartMisil_recto = new QTimer (this);
     timerEliminacion = new QTimer(this);
+    timerAvion = new QTimer(this);
+    timerMisilesAvion = new QTimer(this);
 
 
+    timerMisilesAvion->setInterval(1);
+    timerAvion->setInterval(30);
     timerEliminacion->setInterval(1);
     timerStartMisil_recto->setInterval(20);
     timerMisil_recto->setInterval(1000);
@@ -521,6 +601,8 @@ void MainWindow::set_timers()
     timerMisil_circular->setInterval(1);
 
 
+    connect(timerMisilesAvion, &QTimer::timeout, this, &MainWindow::misiles_avion_);
+    connect(timerAvion, &QTimer::timeout, this, &MainWindow::IniciarAvion);
     connect(timerEliminacion, &QTimer::timeout, this, &MainWindow::delete_);
     connect(timerStartMisil_recto, &QTimer::timeout, this, &MainWindow::IniciarMovMisil);
     connect(timerMisil_recto, &QTimer::timeout, this, &MainWindow::misil_recto);

@@ -55,20 +55,47 @@ prota::prota(int _life)
             cont++;
         }
     }
+
+    mov_prota = new QGraphicsPixmapItem(movimiento_prota[32]);
+}
+
+prota::prota(unsigned int life_)
+{
+    set_life(life_);
+    sprite sprite_to_cut;
     //for para obtener las animaciones del avion
     movimiento_avion = new QPixmap [18];
-    cont = 0;
+    unsigned int cont = 0;
     for (unsigned int x = 0; x < 18; x++){
         if (x >= 0 && x < 9 ){
-            movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,12,95,60);
+            movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,13,95,60).scaled(280,125);
+            cont++;
             if(x == 8) cont = 0;
         }
-        else movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,12,95,60);
+        else {
+            movimiento_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,12,95,60).scaled(280,125);
+            cont++;
+        }
     }
 
     //for para obtener los misiles de ese avion
 
-    mov_prota = new QGraphicsPixmapItem(movimiento_prota[32]);
+    movimiento_misiles_avion = new QPixmap [16];
+    cont = 0;
+    for (unsigned int x = 0; x < 16; x++){
+        if (x >= 0 && x < 8 ){
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,15,51,30).scaled(60,130);
+            cont++;
+            if(x == 7) cont = 0;
+        }
+        else {
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,14,51,30).scaled(60,130);
+            cont++;
+        }
+    }
+
+    mov_misiles_avion = new QGraphicsPixmapItem (movimiento_misiles_avion[0]);
+    mov_avion = new QGraphicsPixmapItem(movimiento_avion[0]);
 }
 
 prota::prota()
@@ -381,7 +408,24 @@ void prota::firme(QTimer *timerFirme)
     mov_prota->setPixmap(movimiento_prota[animation_counter_4]);
     if (animation_counter_4 == 55) {
         timerFirme->stop();
+        animation_counter_4 = 25;
     }
+}
+
+void prota::avion(QTimer *timerAvion, unsigned int pos_y, QTimer *timerMisilesAvion)
+{
+    animation_counter_6++;
+    t_seno+=0.01;
+    if (t_seno == 0.01){
+        y_inicial_1 = pos_y;
+    }
+    if (animation_counter_6 == 8) animation_counter_6 = 0;
+    mov_avion->setPixmap(movimiento_avion[animation_counter_6]);
+    double new_y = y_inicial_1 + amplitud * sin(2 *M_PI * frecuencia_ *t_seno);
+    mov_avion->setY(new_y);
+    mov_avion->setX(mov_avion->x() + 10);
+    if (mov_avion->x() >= 150) timerMisilesAvion->start();
+
 }
 
 QPixmap *prota::get_movimiento_prota()
@@ -427,13 +471,13 @@ void prota::set_animation_counter_5()
 }
 
 
-
 void prota::deadProta(){
 
     sprite_prota->setAttributes(300,80,14);
     methodCharacter(sprite_prota);
 
 }
+
 
 
 
