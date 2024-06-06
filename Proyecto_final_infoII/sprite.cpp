@@ -77,6 +77,7 @@ void sprite::setCont(int _cont){
 
 }
 
+
 int sprite::getCont(){
 
     return cont;
