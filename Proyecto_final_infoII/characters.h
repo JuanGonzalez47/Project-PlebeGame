@@ -29,9 +29,9 @@ public:
     void setSpeed();
     void setLife(int n);
 
-    qreal getY();
     int getSpeed();
     int getLife();
+
 
 };
 

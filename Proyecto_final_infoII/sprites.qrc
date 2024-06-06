@@ -3,5 +3,7 @@
         <file>Sprite_prota.png</file>
         <file>soldado_rifle.png</file>
         <file>bala_1.png</file>
+        <file>sprite_prota2.png</file>
+        <file>granada.png</file>
     </qresource>
 </RCC>

@@ -47,8 +47,7 @@ class MainWindow : public QMainWindow
     unsigned int cont_obstacle=0;
     unsigned int num_obstacle=3;
     unsigned int num_bullets=5;
-    unsigned int num_enemys=2;
-
+    unsigned int num_enemys=6;
 
 
 
@@ -66,6 +65,7 @@ public:
     void setEnemys();
     void moveEnemyRandom();
 
+    void mousePressEvent(QMouseEvent *event);
     void bullet();
 
     void setObstacles();

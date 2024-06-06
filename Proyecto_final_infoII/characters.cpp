@@ -64,12 +64,6 @@ void charac::setLife(int n){
 
 }
 
-qreal charac::getY(){
-
-    return y;
-
-}
-
 int charac::getLife()
 {
     return life;

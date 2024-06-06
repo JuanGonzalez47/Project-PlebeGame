@@ -15,10 +15,9 @@ public:
 
     void setSprite();
     void setAttributes(int _sprite_y,int _width,int n_image);
-
     void setCont(int _cont);
-    int getCont();
 
+    int getCont();
     qreal gety();
     qreal getx();
 
@@ -31,7 +30,7 @@ private:
     int sprite_y;
     int sprite_width;
     int sprite_height;
-    int n_image=9;
+    int n_image=7;
     int cont = 0;  // Inicializar la variable cont
 };
 

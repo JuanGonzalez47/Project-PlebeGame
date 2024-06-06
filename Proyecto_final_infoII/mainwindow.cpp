@@ -9,8 +9,8 @@
 #include <QVector>
 #include <QPixmap>
 #include <cstdlib>
-#include <ctime>
-#include <cmath>
+#include <cstdlib>
+
 
 int numRandom(int limiteInferior, int limiteSuperior) {
     static bool seeded = false;
@@ -47,14 +47,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     t_prota_shoot = new QTimer(this);
 
-    sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 98,100,400);
+    sprite_prota = new sprite(":/sprite_prota2.png", 0, 0, 43, 52,100,400);
 
-    sprite_prota->setScale(0.8);
+    sprite_prota->setScale(2);
     scene->addItem(sprite_prota);  // Agregar el sprite a la escena    
     sprite_prota->setPos(100,400);
 
 
-    marco=new prota(100,400,10,10,10,sprite_prota);
+    marco=new prota(100,400,10,10,10,sprite_prota,scene);
 
     setEnemys();
 
@@ -147,70 +147,23 @@ void MainWindow::setObstacles(){
 void MainWindow::rechargeProta(){
 
     t_prota_recharge = new QTimer(this);
-    sprite_prota->setAttributes(200,115,10);
-    sprite_prota->setCont(0);
     connect(t_prota_recharge, &QTimer::timeout, [=]() {
 
-        marco->methodCharacter(sprite_prota);
-        if(sprite_prota->getCont()==9) t_prota_recharge->stop();
+        marco->recharge(t_prota_recharge);
     });
 
     t_prota_recharge->start(60);
 
 }
 
-/*void MainWindow::shootProta(prota *prot)
-{
-    t_prota_shoot = new QTimer(this);
-    sprite_prota->setAttributes(100,120,4);
-    sprite_prota->setCont(0);
-    connect( t_prota_shoot, &QTimer::timeout, [=]() {
-
-        marco->methodCharacter(sprite_prota);
-        if(sprite_prota->getCont()==3)  t_prota_shoot->stop();
-
-    });
-
-    t_prota_shoot->start(60);
-
-    prot->setCont_bullets();
-
-
-    // Crea un nuevo temporizador para la bala
-     QTimer *bullet_timer = new QTimer(this);
-
-
-
-    // Configura la posición y escala de la bala
-    sprite_bullet[prot->getCont_bullets()]->setScale(0.5);
-    sprite_bullet[prot->getCont_bullets()]->setPos(sprite_prota->getx(), sprite_prota->gety());
-
-    // Conecta el temporizador de la bala
-    connect(bullet_timer, &QTimer::timeout, [=] {
-        // movimiento de la bala
-
-        sprite_bullet[prot->getCont_bullets()]->moveImage(10, 0);
-
-    });
-    // Inicia el temporizador de la bala
-    bullet_timer->start(40);
-
-
-}*/
-
-
 void MainWindow::shootProta(prota *prot)
 {
 
     // Temporizador para la animación del personaje disparando
     t_prota_shoot = new QTimer(this);
-    sprite_prota->setAttributes(100,120,4);
-    sprite_prota->setCont(0);
+
     connect(t_prota_shoot, &QTimer::timeout, [=]() {
-        marco->methodCharacter(sprite_prota);
-        if(sprite_prota->getCont() == 3) {
-            t_prota_shoot->stop();
-        }
+        marco->shoot(t_prota_shoot);
     });
 
     t_prota_shoot->start(60);
@@ -227,16 +180,19 @@ void MainWindow::shootProta(prota *prot)
     bullet->setPos(sprite_prota->getx()+70, sprite_prota->gety()+8);
 
     // Agrega la bala a la escena o al contenedor correspondiente
-    scene->addItem(bullet); // Asumiendo que tienes una QGraphicsScene llamada 'scene'
+    scene->addItem(bullet);
 
     // Conecta el temporizador de la bala
     connect(bullet_timer, &QTimer::timeout, [=]() {
+
+
         // Movimiento de la bala
         bullet->moveBy(10, 0);
 
 
         bool colli_enemy=false;
 
+        //verificar si choca con un enemigo
         for(unsigned int i=0;i<num_enemys;i++){
             if(bullet->collidesWithItem(enemys[i]->getSprite_rifle())){
                 bullet_timer->stop();
@@ -268,6 +224,7 @@ void MainWindow::shootProta(prota *prot)
 
         if(!colli_enemy){
 
+            //verificar si choca  con un obstaculo
             for(unsigned int i=0;i<num_obstacle;i++){
                 if(bullet->collidesWithItem(obstacleItems[i])){
                     bullet_timer->stop();
@@ -276,7 +233,8 @@ void MainWindow::shootProta(prota *prot)
                     delete bullet_timer;
                     break;
 
-                }else if (bullet->pos().x() > 1500) {
+                //verifiar si se pasa de los limites
+                }else if (bullet->pos().x() > 1500 || bullet->pos().x()<-10) {
 
                     bullet_timer->stop();
                     scene->removeItem(bullet);
@@ -301,23 +259,84 @@ void MainWindow::shootProta(prota *prot)
 void MainWindow::shootEnemy(enemy *ene,QTimer *t_move){
 
     t_move->stop();
-
     QTimer *t_enemy_shoot = new QTimer(this);
-
-    ene->getSprite_rifle()->setAttributes(0,140,6);
-    ene->getSprite_rifle()->setCont(0);
     connect(t_enemy_shoot, &QTimer::timeout, [=]() {
 
-        ene->methodCharacter( ene->getSprite_rifle());
+        ene->shoot(t_move,t_enemy_shoot);
 
-        if( ene->getSprite_rifle()->getCont()==5){
-            ene->getSprite_rifle()->setCont(0);
-            t_enemy_shoot->stop();
-            t_move->start();
+    });
+    t_enemy_shoot->start(130);
+
+    // Crea un nuevo sprite y temporizador para la bala
+    sprite *bullet_enemy = new sprite(":bala_1.png", 0, 0, 100, 50, 400, 400); // Crea un nuevo sprite para la bala
+    QTimer *bullet_enemy_timer = new QTimer(this); // Crea un nuevo temporizador para la bala
+
+    // Configura la posición y escala de la bala
+    bullet_enemy->setScale(0.3);
+    bullet_enemy->setPos(ene->getSprite_rifle()->getx(), (ene->getSprite_rifle()->gety()));
+
+    // Agrega la bala a la escena o al contenedor correspondiente
+    scene->addItem(bullet_enemy);
+
+    connect(bullet_enemy_timer, &QTimer::timeout, [=]() {
+
+
+        // Movimiento de la bala
+        bullet_enemy->moveBy(-10, 0);
+
+        bool colli_prota=false;
+
+        //verificar si choca con el protagonista
+
+        if(bullet_enemy->collidesWithItem(sprite_prota)){
+            bullet_enemy_timer->stop();
+            scene->removeItem(bullet_enemy);
+            delete bullet_enemy;
+            delete bullet_enemy_timer;
+            colli_prota=true;
+            marco->setLife(1);
+            if(marco->getLife()==0){
+
+                exit(EXIT_SUCCESS);
+                //mostrar muerte
+
+                //perdiste el juego
+            }
         }
+
+
+        if(!colli_prota) {
+
+            //verificar si choca  con un obstaculo
+            for(unsigned int i=0;i<num_obstacle;i++){
+                if(bullet_enemy->collidesWithItem(obstacleItems[i])){
+                    bullet_enemy_timer->stop();
+                    scene->removeItem(bullet_enemy);
+                    delete bullet_enemy;
+                    delete bullet_enemy_timer;
+                    break;
+
+                    //verifiar si se pasa de los limites
+                }else if (bullet_enemy->pos().x() > 1500 || bullet_enemy->pos().x() < -10) {
+
+                    bullet_enemy_timer->stop();
+                    scene->removeItem(bullet_enemy);
+                    delete bullet_enemy;
+                    delete bullet_enemy_timer;
+                    break;
+                }
+
+            }
+        }
+
+
+
     });
 
-    t_enemy_shoot->start(130);
+    bullet_enemy_timer->start(40);
+
+
+
 }
 
 
@@ -326,6 +345,7 @@ void MainWindow::shootEnemy(enemy *ene,QTimer *t_move){
 void MainWindow::moveAndShootEnemy(enemy *ene) {
 
     QTimer *t_enemy_move = new QTimer(this);
+
     connect(t_enemy_move, &QTimer::timeout, [=]() {
 
         ene->sumMovran();
@@ -362,7 +382,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
     t_prota_shoot->stop();
 
-
     //Manejo del evento de tecla
     switch(event->key()) {
     case Qt::Key_A:
@@ -394,7 +413,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 
 
-            if(sprite_prota->gety()<x1+50){
+            if(sprite_prota->getx()<x1+50){
                 marco->moveLeft();
 
             }else{
@@ -552,13 +571,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
         rechargeProta();
 
+
         break;
 
     case Qt::Key_Return:
 
        shootProta(marco);
-
-        break;
 
     default:
 
@@ -567,22 +585,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    // Crear una nueva granada
+    sprite *grenade = new sprite(":/granada.png", 0, 0, 26, 24, sprite_prota->getx() + 7, sprite_prota->gety() + 8);
+    grenade->setScale(2);
+    grenade->setPos(sprite_prota->getx() + 7, sprite_prota->gety() + 8);
 
-/*void MainWindow::bullet(){
+    // Agregar la granada a la escena
+    scene->addItem(grenade);
 
-    qDebug("puta");
+    int y = marco->getY();
+    int x = marco->getX();
 
-    sprite_bullet[num_bullets]->setPos(sprite_prota->pos());
-      qDebug("pdta");
+    // Crear un nuevo temporizador para esta granada
+    QTimer *timer_grenade = new QTimer(this);
+    connect(timer_grenade, &QTimer::timeout, [=]() {
+            marco->throwGrenade(timer_grenade, y, x, grenade);
+        });
 
-    QTimer *bullet_timer = new QTimer(this);
-
-    connect(bullet_timer, &QTimer::timeout, [=]() {
-
-        sprite_bullet[num_bullets]->moveImage(10,0);
-    });
-
-    bullet_timer ->start(50);
-}*/
-
+    timer_grenade->start(50);
+}
 

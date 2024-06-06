@@ -1,5 +1,6 @@
 # include "charac_enemy.h"
 
+
 enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed, _x,_y){
 
 
@@ -44,9 +45,19 @@ void enemy::moveLeftEnemy(){
 
 }
 
-void enemy::shoot(){
+void enemy::shoot(QTimer *t_move, QTimer *t_enemy_shoot){
 
-      methodCharacter( sprite_enemy_rifle);
+
+
+    getSprite_rifle()->setAttributes(0,140,6);
+    methodCharacter(sprite_enemy_rifle);
+
+    if(sprite_enemy_rifle->getCont()==5){
+        sprite_enemy_rifle->setCont(0);
+        t_enemy_shoot->stop();
+        getSprite_rifle()->setCont(0);
+        t_move->start();
+    }
 
 }
 
