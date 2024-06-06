@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-//ORGANIZAR SALTO Y MUERTE, FALTA QUE CUANDO EL TIMER LLEGUE A CERO LLEGUE EL HELICOPTERO AMIGO A MATAR AL OTRO, FALTA CUADRAR LOS OTROS MISILES Y QUE ESTOS LE BAJEN UNA VIDA AL PERSONAJE
-//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO, FALTA MISIL DEJE DE PERSEGUIR
+//FALTA QUE CUANDO EL TIMER LLEGUE A CERO LLEGUE EL HELICOPTERO AMIGO A MATAR AL OTRO, FALTA CUADRAR LOS OTROS MISILES Y QUE ESTOS LE BAJEN UNA VIDA AL PERSONAJE
+//FALTA UE SI LA VIDA DEL PERSONAJE LLEGA A CERO SE REPRODUZCA LA ANIMACION DE MUERTE Y CIERRE EL PROGRAMA, AGREGAR PANTALLA DE EXITO DE JUEGO PASADO
 
+//tareas
+
+//1. dejar caer misiles cada cierto tiempo
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -105,12 +108,12 @@ void MainWindow::SpaceKey()
 
 void MainWindow::pendulo()
 {
-    nazi.pendulo_simple(nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo,timerMisil);
+    nazi.pendulo_simple(nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerPendulo,timerMovimientoRecto,timerIniciarPendulo,timerMisil_circular);
 }
 
 void MainWindow::MovimientoRecto()
 {
-    nazi.Movimiento_recto();
+    nazi.Movimiento_recto(timerMisil_recto);
 }
 
 void MainWindow::iniciar_secuencia()
@@ -129,27 +132,51 @@ void MainWindow::iniciar_pendulo()
 
 void MainWindow::preparo_disparo()
 {
-    nazi.animacion_preparo_disparo(timerPendulo,timerDisparo);
+    nazi.animacion_preparo_disparo(timerPendulo,timerDisparo,timerMisil_recto);
 }
 
 void MainWindow::misil()
 {
-    unsigned int pos_x = nazi.get_mov_enemigo()->x() + 40;
-    unsigned int pos_y = nazi.get_mov_enemigo()->y() + 120;
-    paint(pos_x,pos_y,1,nazi.get_mov_misil(),escena_nivel_2);
-    timerMisil->stop();
-    timerMisil_circular->start();
+    valid_delete = false;
+    if (valid_put_on_escene_misil){
+        nazi.set_mov_misil();
+        unsigned int pos_x = nazi.get_mov_enemigo()->x() + 40;
+        unsigned int pos_y = nazi.get_mov_enemigo()->y() + 120;
+        paint(pos_x,pos_y,1,nazi.get_mov_misil(),escena_nivel_2);
+    }
+}
+
+void MainWindow::misil_recto()
+{
+    misil();
+    timerStartMisil_recto->start();
+    valid_put_on_escene_misil = false;
+
 }
 
 void MainWindow::circular()
 {
+    misil();
     nazi.movimiento_cirular(timerMisil_circular,nazi.get_mov_enemigo()->x(),nazi.get_mov_enemigo()->y(),timerSeguimiento);
+    valid_put_on_escene_misil = false;
+
 }
 
 void MainWindow::seguimiento()
 {
-    QVector2D pos_personaje(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
-    nazi.seguimiento_mov(pos_personaje,timerSeguimiento,timerExplosion,timerMuerte);
+    if (llanta_derecha){
+        QVector2D pos_objeto(llanta_1->x(), llanta_1->y());
+        nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
+    }
+    else if (llanta_izquierda){
+        QVector2D pos_objeto(llanta_2->x(), llanta_2->y());
+        nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,false);
+    }
+    else{
+        walter.set_life(1);
+        QVector2D pos_objeto(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
+        nazi.seguimiento_mov(pos_objeto,timerSeguimiento,timerExplosion,timerMuerte,true);
+    }
 }
 
 void MainWindow::firme()
@@ -167,7 +194,6 @@ void MainWindow::iniciar_firme()
             validKey_move = false;
             telefonoExist = false;
             valid = true;
-            //agregar a la escena el conteo (disparo del timer y setar en las posiciones los dos puntos y el time)
             set_temporizador();
         }
     }
@@ -179,13 +205,29 @@ void MainWindow::rebotar()
         walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,false,3,timerRebotar);
         reproducir_animacion = true;
         reproducir_animacion_ = false;
+        if (timerSeguimiento->isActive()) llanta_derecha = true;
     }
     else if (walter.get_mov_prota()->collidesWithItem(llanta_2) || reproducir_animacion_){
         walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,timerSpace,true,3,timerRebotar);
         reproducir_animacion_ = true;
         reproducir_animacion = false;
+        if (timerSeguimiento->isActive()) llanta_izquierda = true;
     }
     else if (walter.get_mov_prota()->y() >= 600) timerRebotar->stop();
+
+}
+
+void MainWindow::IniciarMovMisil()
+{
+    QVector2D pos_objeto(walter.get_mov_prota()->x(), walter.get_mov_prota()->y());
+    nazi.misil_recto(timerExplosion,pos_objeto,timerMuerte,true);
+}
+
+void MainWindow::delete_()
+{
+   escena_nivel_2->removeItem(nazi.get_mov_misil());
+   valid_put_on_escene_misil = true;
+   timerEliminacion->stop();
 }
 
 
@@ -197,7 +239,6 @@ void MainWindow::set_temporizador()
     paint(153,15,0,puntos,escena_nivel_2);
     set_arreglo_numeros();
     timerTemporizador->start();
-    //iniciar timer para llevar el conteo
 
 }
 
@@ -221,8 +262,6 @@ void MainWindow::set_arreglo_numeros()
     paint(192,18,0,numero_n[2],escena_nivel_2);
     paint(220,18,0,numero_n[3],escena_nivel_2);
 
-    //agregar los corazones de la vida en la escena
-
     corazon_n[0] = new QGraphicsPixmapItem(corazon.scaled(35,35));
     corazon_n[1] = new QGraphicsPixmapItem(corazon.scaled(35,35));
     corazon_n[2] = new QGraphicsPixmapItem(corazon.scaled(35,35));
@@ -235,6 +274,20 @@ void MainWindow::set_arreglo_numeros()
     paint(130,60,0,corazon_n[3],escena_nivel_2);
     paint(170,60,0,corazon_n[4],escena_nivel_2);
 
+}
+
+void MainWindow::set_corazones()
+{
+    switch (life) {
+    case 4: escena_nivel_2->removeItem(corazon_n[4]);
+        break;
+    case 3: escena_nivel_2->removeItem(corazon_n[3]);
+        break;
+    case 2: escena_nivel_2->removeItem(corazon_n[2]);
+        break;
+    case 1: escena_nivel_2->removeItem(corazon_n[1]);
+        break;
+    }
 }
 
 void MainWindow::temporizador()
@@ -253,24 +306,32 @@ void MainWindow::temporizador()
     }
     else {
         timerTemporizador->stop();
-        //poner pantalla de game over
     }
 }
 
 void MainWindow::explosion()
 {
     valid_delete = true;
-    nazi.explosion(timerExplosion);
+    nazi.explosion(timerExplosion, timerStartMisil_recto, timerEliminacion);
 }
 
 void MainWindow::muerte()
 {
-    game_run = false;
-    timerStop->start();
-    timerSpace->stop();
-    timerRebotar->stop();
-    if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,false,timerMuerte,timerGameOver);
-    else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,true,timerMuerte,timerGameOver);
+    if (walter.get_life() == 1 || telefonoExist){
+        game_run = false;
+        timerStop->start();
+        timerSpace->stop();
+        timerRebotar->stop();
+        if (TeclaPressedA) walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,false,timerMuerte,timerGameOver);
+        else walter.movimiento_parabolico(velocidad_personaje,walter.get_mov_prota()->y() + 10,walter.get_mov_prota()->x() + 10,true,timerMuerte,timerGameOver);
+    }
+    else {
+        life = walter.get_life();
+        walter.set_life(--life);
+        set_corazones();
+        timerMuerte->stop();
+    }
+
 }
 
 void MainWindow::stop()
@@ -293,7 +354,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     if (game_run){
         if (event->isAutoRepeat())return;
 
-        if (!timerExplosion->isActive() && valid_delete) escena_nivel_2->removeItem(nazi.get_mov_misil());
+        if (!timerMisil_circular->isActive() && !timerStartMisil_recto->isActive()) valid_put_on_escene_misil = true;
+
+        if (!timerSeguimiento){
+            llanta_derecha = false;
+            llanta_derecha = false;
+        }
+
+        if (!timerExplosion->isActive() && valid_delete){
+            llanta_izquierda = false;
+            llanta_derecha = false;
+        }
 
         if (!timerSpace->isActive() && !timerRebotar->isActive() && !timerFirme->isActive()){
             spacePressed = true;
@@ -361,6 +432,8 @@ void MainWindow::set_pantalla_carga()
 
 void MainWindow::gameOver()
 {
+    timerMisil_recto->stop();
+    timerIniciarPendulo->stop();
     game_over = new QGraphicsScene(this);
     ui->graphicsView->setFixedSize(size_screen_w, size_screen_h);
     game_over->setSceneRect(0, 0, size_screen_w - 5, size_screen_h - 5);
@@ -407,7 +480,6 @@ void MainWindow::set_timers()
     timerPendulo = new QTimer(this);
     timerMovimientoRecto = new QTimer(this);
     timerSpace = new QTimer(this);
-    timerMisil = new QTimer(this);
     timerIniciarPendulo = new QTimer(this);
     timerDisparo = new QTimer(this);
     timerMisil_circular = new QTimer(this);
@@ -421,8 +493,14 @@ void MainWindow::set_timers()
     timerGameOver = new QTimer(this);
     timerStop = new QTimer(this);
     timerFinalizar = new QTimer(this);
+    timerMisil_recto = new QTimer(this);
+    timerStartMisil_recto = new QTimer (this);
+    timerEliminacion = new QTimer(this);
 
 
+    timerEliminacion->setInterval(1);
+    timerStartMisil_recto->setInterval(20);
+    timerMisil_recto->setInterval(1000);
     timerFinalizar->setInterval(1000);
     timerGameOver->setInterval(1000);
     timerStop->setInterval(1);
@@ -441,9 +519,11 @@ void MainWindow::set_timers()
     timerA->setInterval(100);
     timerD->setInterval(100);
     timerMisil_circular->setInterval(1);
-    timerMisil->setInterval(10);
 
 
+    connect(timerEliminacion, &QTimer::timeout, this, &MainWindow::delete_);
+    connect(timerStartMisil_recto, &QTimer::timeout, this, &MainWindow::IniciarMovMisil);
+    connect(timerMisil_recto, &QTimer::timeout, this, &MainWindow::misil_recto);
     connect(timerFinalizar, &QTimer::timeout, this, &MainWindow::finalizarJuego);
     connect(timerStop, &QTimer::timeout, this, &MainWindow::stop);
     connect(timerGameOver, &QTimer::timeout, this, &MainWindow::gameOver);
@@ -455,7 +535,6 @@ void MainWindow::set_timers()
     connect(timerFirme, &QTimer::timeout, this, &MainWindow::firme);
     connect(timerSeguimiento, &QTimer::timeout, this, &MainWindow::seguimiento);
     connect(timerMisil_circular, &QTimer::timeout, this, &MainWindow::circular);
-    connect(timerMisil, &QTimer::timeout, this, &MainWindow::misil);
     connect(timerDisparo, &QTimer::timeout, this, &MainWindow::preparo_disparo);
     connect(timerIniciarPendulo, &QTimer::timeout, this, &MainWindow::iniciar_pendulo);
     connect(timerPendulo, &QTimer::timeout, this, &MainWindow::pendulo);

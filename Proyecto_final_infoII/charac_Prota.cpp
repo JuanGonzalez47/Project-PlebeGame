@@ -1,5 +1,7 @@
 # include "charac_Prota.h"
 
+#include <iostream>
+
 prota::prota(int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed), scene(_scene){
 
     sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 99,400,400);
@@ -161,13 +163,24 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
             double new_x = x_inicial_ + Vox*t;
 
+            if(t == 0.01){
+                double a = 0.5*g;
+                double b = -Voy;
+                double c = y_inicial_ - 600;
+                double discriminante = b * b - 4 * a * c;
+                double raiz = sqrt(abs(discriminante));
+
+                double x1 = (-b + raiz) / (2 * a);
+                double x2 = (-b - raiz) / (2 * a);
+                if (x1 > x2) t_final = x1;
+                else t_final = x2;
+            }
+
             mov_prota->setPixmap(movimiento_prota[16]);
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_3 >= 1000){
-                //parar animacion ya que volvimos a nuestra y de partida y por ende ya estamos en el suelo
-                //agregar animacion de aterrizaje y evaluar sui su posicion fianal es el de la llanta
+            if (t >= t_final){
                 mov_prota->setPixmap(movimiento_prota[0]);
                 animation_counter_3 = 13;
                 t = 0;
@@ -207,11 +220,24 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
             double new_x = x_inicial_ - Vox*t;
 
+            if(t == 0.01){
+                double a = 0.5*g;
+                double b = -Voy;
+                double c = y_inicial_ - 600;
+                double discriminante = b * b - 4 * a * c;
+                double raiz = sqrt(abs(discriminante));
+
+                double x1 = (-b + raiz) / (2 * a);
+                double x2 = (-b - raiz) / (2 * a);
+                if (x1 > x2) t_final = x1;
+                else t_final = x2;
+            }
+
             mov_prota->setPixmap(movimiento_prota[22]);
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_3 <= -1000){
+            if (t >= t_final){
                 //parar animacion ya que volvimos a nuestra y de partida y por ende ya estamos en el suelo
                 //agregar animacion de aterrizaje y evaluar sui su posicion fianal es el de la llanta
                 mov_prota->setPixmap(movimiento_prota[13]);
@@ -238,9 +264,9 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 
         if(animation_counter_5 >= 16){
 
-            t+=0.01;
+            tiempo+=0.01;
 
-            if (t == 0.01 ){
+            if (tiempo == 0.01 ){
                 y_inicial_ = y_inicial;
                 x_inicial_ = x_inicial;
             }
@@ -251,22 +277,41 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
 
             //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
-            double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
-            double new_x = x_inicial_ + Vox*t;
+            double new_y = y_inicial_ - Voy*tiempo + (0.5*g*tiempo*tiempo);
+            double new_x = x_inicial_ + Vox*tiempo;
+
+            //calcular el tiempo final
+
+            if(tiempo == 0.01){
+                double a = 0.5*g;
+                double b = -Voy;
+                double c = y_inicial_ - 600;
+                double discriminante = b * b - 4 * a * c;
+                double raiz = sqrt(abs(discriminante));
+
+                double x1 = (-b + raiz) / (2 * a);
+                double x2 = (-b - raiz) / (2 * a);
+                if (x1 > x2) t_final = x1;
+                else t_final = x2;
+            }
+
 
             mov_prota->setPixmap(movimiento_prota[37]);
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_5 >= 800){
+
+            if (tiempo >= t_final){
                 mov_prota->setPixmap(movimiento_prota[36]);
                 timerMuerte->stop();
                 gameOver->start();
+                tiempo = 0;
+                t_final = 0;
             }
         }
     }
     else{
-        if (animation_counter_5 == 13 && t == 0) set_animation_counter_3();
+        if (animation_counter_5 == 13 && tiempo == 0) set_animation_counter_3();
         animation_counter_5--;
         //realizar primero las animaciones de tomar impulso
         if (animation_counter_5 == 24) mov_prota->setPixmap(movimiento_prota[33]);
@@ -280,9 +325,9 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             //ecuaciones para regir la posicion en x y y, x = xo + vox*t (ecuacion MRU) no hay aceleracion, en Y (MRUA) y = yo + voy*t - 1/2*g*t^2.
 
             //sumarle al tiempo para actualizar posicion y al contador de la animacion
-            t+=0.01;
+            tiempo+=0.01;
 
-            if (t == 0.01 ){
+            if (tiempo == 0.01 ){
                 y_inicial_ = y_inicial;
                 x_inicial_ = x_inicial;
             }
@@ -292,23 +337,42 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
             double Voy = (velocidad_inicial*2)*sin((angulo1*M_PI) / 180.0);
             double Vox = (velocidad_inicial*2)*cos((angulo1*M_PI) / 180.0);
 
+            //calcular el tiempo final
+
+            if(tiempo == 0.01){
+                double a = 0.5*g;
+                double b = -Voy;
+                double c = y_inicial_ - 600;
+                double discriminante = b * b - 4 * a * c;
+                double raiz = sqrt(abs(discriminante));
+
+                double x1 = (-b + raiz) / (2 * a);
+                double x2 = (-b - raiz) / (2 * a);
+                if (x1 > x2) t_final = x1;
+                else t_final = x2;
+            }
+
             //definir la posicion en x y en y, se trucan lo signos de new_y ya que en el plano la y crece para abajo y decrece para arriba
-            double new_y = y_inicial_ - Voy*t + (0.5*g*t*t);
-            double new_x = x_inicial_ - Vox*t;
+            double new_y = y_inicial_ - Voy*tiempo + (0.5*g*tiempo*tiempo);
+            double new_x = x_inicial_ - Vox*tiempo;
+
 
             mov_prota->setPixmap(movimiento_prota[34]);
             mov_prota->setX(new_x);
             mov_prota->setY(new_y);
 
-            if (new_y >= 600 && animation_counter_5 <= -1000){
+            if (tiempo >= t_final){
                 mov_prota->setPixmap(movimiento_prota[35]);
                 timerMuerte->stop();
                 gameOver->start();
+                tiempo = 0;
+                t_final = 0;
             }
         }
     }
 
 }
+
 
 void prota::firme(QTimer *timerFirme)
 {

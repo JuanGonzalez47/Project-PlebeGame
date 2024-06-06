@@ -8,7 +8,7 @@
 #define angulo1 75
 #define g 9.8
 
-class prota : protected charac {
+class prota : public charac {
 
 private:
 
@@ -17,7 +17,7 @@ private:
     QPixmap *movimiento_prota, *movimiento_avion, *movimiento_misiles_avion;
     QGraphicsPixmapItem *mov_prota, *mov_avion, *mov_misiles_avion;
     int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13, animation_counter_4 = 25, animation_counter_5 = 13;
-    double y_inicial_ = 0, x_inicial_ = 0, t = 0;
+    double y_inicial_ = 0, x_inicial_ = 0, t = 0, t_final = 0, tiempo = 0;
 
 
 public:

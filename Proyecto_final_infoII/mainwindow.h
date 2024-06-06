@@ -29,9 +29,9 @@ class MainWindow : public QMainWindow
     QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *time, *puntos, **numero_n, **corazon_n, *game_over_;
     prota walter;
     enemy nazi;
-    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar;
-    bool isDKeyPressed = false, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true;
-    int tiempo_restante = 120;
+    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar, *timerMisil_recto, *timerStartMisil_recto, *timerEliminacion;
+    bool isDKeyPressed = false, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true, llanta_derecha = false, llanta_izquierda = false, valid_put_on_escene_misil = true;
+    int tiempo_restante = 120, life;
 
 public:
 
@@ -47,12 +47,8 @@ public:
     void set_nivel_2();
     void set_temporizador();
     void set_arreglo_numeros();
-    void temporizador();
-    void explosion();
-    void muerte();
-    void stop();
-    void gameOver();
-    void finalizarJuego();
+    void set_corazones();
+
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -69,11 +65,20 @@ public:
     void iniciar_pendulo();
     void preparo_disparo();
     void misil();
+    void misil_recto();
     void circular();
     void seguimiento();
     void firme();
     void iniciar_firme();
     void rebotar();
+    void IniciarMovMisil();
+    void delete_();
+    void temporizador();
+    void explosion();
+    void muerte();
+    void stop();
+    void gameOver();
+    void finalizarJuego();
 
 private:
 

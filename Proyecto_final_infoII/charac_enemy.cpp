@@ -51,7 +51,7 @@ enemy::enemy(int _life)
 
 
 
-void enemy::pendulo_simple(double x_inicial, double y_inicial, QTimer *timerPendulo, QTimer *timerMovimientoRecto, QTimer *timerIniciarPendulo, QTimer *timerMisil)
+void enemy::pendulo_simple(double x_inicial, double y_inicial, QTimer *timerPendulo, QTimer *timerMovimientoRecto, QTimer *timerIniciarPendulo, QTimer *timerMisil_circular)
 {
     //el MAS movimiento armonico simple en especial del pendulo simple sabemos que viene dado por una ecacion diferencial, sin embargo tiene una aproximacion valida
     // la de angulos pequeños donde decimos que seno(theta) es aproxi theta, sin emabrgo esta no me funciona para mover el helicoptero, por ende optare por un metodo
@@ -82,26 +82,31 @@ void enemy::pendulo_simple(double x_inicial, double y_inicial, QTimer *timerPend
     }
     if(animation_counter_1 == (periodo*1000)/2){
         mov_enemigo->setPixmap(movimiento_enemigo[11]);
-        timerMisil->start();
+        timerMisil_circular->start();
     }
     if(animation_counter_1 == periodo*1000){
         timerPendulo->stop();
         timerMovimientoRecto->start();
         timerIniciarPendulo->start();
         animation_counter_1 = 0;
+        t = 0;
     }
 
 
 }
 
-void enemy::Movimiento_recto()
+void enemy::Movimiento_recto(QTimer *timerMisil_recto)
 {
+    bool valid = false;
     animation_counter_2++;
+    if ((mov_enemigo->x())/2 > size_screen_w) valid = true;
+
     if (animation_counter_2 == 6) animation_counter_2 = 0;
     mov_enemigo->setPixmap(movimiento_enemigo[animation_counter_2]);
     if(valid_move_left){
         mov_enemigo->setX(mov_enemigo->x()-velocidad_helicoptero);
         if (mov_enemigo->x() <= 100){
+            if (valid)  timerMisil_recto->start();
             valid_move_right = true;
             valid_move_left = false;
         }
@@ -109,30 +114,32 @@ void enemy::Movimiento_recto()
     else if (valid_move_right){
         mov_enemigo->setX(mov_enemigo->x() + velocidad_helicoptero);
         if (mov_enemigo->x() >= size_screen_w - 450) {
+            if (!valid) timerMisil_recto->start();
             valid_move_left = true;
             valid_move_right = false;
         }
     }
 }
 
-void enemy::seguimiento_mov(QVector2D pos_personaje,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte)
+void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte)
 {
     animation_counter_3++;
     QVector2D pos_misil(mov_misil->pos().x(), mov_misil->pos().y());
-    QVector2D direccion = pos_personaje - pos_misil;
+    QVector2D direccion = pos_objeto - pos_misil;
     direccion.normalize();
     pos_misil += direccion*velocidad_misil;
+
 
     if (animation_counter_3 == 7) animation_counter_3 = 0;
     mov_misil->setPixmap(movimiento_misil[animation_counter_3]);
     mov_misil->setX(pos_misil.x());
     mov_misil->setY(pos_misil.y());
 
-    if (distancia(pos_misil, pos_personaje) < 7) {
+    if (distancia(pos_misil, pos_objeto) < 10) {
         animation_counter_3 = 0;
-        mov_misil->setY(pos_personaje.y() - 100);
+        mov_misil->setY(pos_objeto.y() - 100);
         timerExplosion->start();
-        timerMuerte->start();
+        if (muerte) timerMuerte->start();
         timerSeguimiento->stop();
     }
 }
@@ -142,8 +149,9 @@ double enemy::distancia(QVector2D vector1, QVector2D vector2)
     return (vector1 - vector2).length();
 }
 
-void enemy::animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo)
+void enemy::animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo, QTimer *timerMisil_recto)
 {
+    timerMisil_recto->stop();
     animation_counter++;
     mov_enemigo->setPixmap(movimiento_enemigo[animation_counter]);
     if (animation_counter == 10) {
@@ -154,13 +162,15 @@ void enemy::animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo
 }
 
 
-void enemy::explosion(QTimer *timerExplosion)
+void enemy::explosion(QTimer *timerExplosion, QTimer *timerStartMisil_recto, QTimer *timerEliminacion)
 {
+    timerStartMisil_recto->stop();
     animation_counter_4++;
     mov_misil->setPixmap(movimiento_misil[animation_counter_4]);
     if (animation_counter_4 == 29){
         animation_counter_4 = 7;
         timerExplosion->stop();
+        timerEliminacion->start();
     }
 }
 
@@ -191,11 +201,37 @@ void enemy::movimiento_cirular(QTimer *timerMisil_circular, double x_inicial, do
     mov_misil->setY(new_y);
 
     if (counter == (periodo_circular*1000)/2){
-        timerSeguimiento->start();
         timerMisil_circular->stop();
         counter = 0;
+        tiempo = 0;
+        timerSeguimiento->start();
     }
 
+}
+
+void enemy::misil_recto(QTimer *timerExplosion, QVector2D pos_objeto, QTimer *timerMuerte, bool muerte)
+{
+    QVector2D pos_misil(mov_misil->pos().x(), mov_misil->pos().y());
+
+    animation_counter_5++;
+    if (animation_counter_5 == 7) animation_counter_5 = 0;
+
+    mov_misil->setPixmap(movimiento_misil[animation_counter_5]);
+    mov_misil->setY(mov_misil->y() + velocidad_misil);
+
+    if (distancia(pos_misil, pos_objeto) < 125) {
+        animation_counter_5 = 0;
+        mov_misil->setY(pos_objeto.y() - 100);
+        timerExplosion->start();
+        if (muerte) timerMuerte->start();
+    }
+    else if (mov_misil->y() >= 530){
+        timerExplosion->start();
+        animation_counter_5 = 0;
+    }
+
+    //agregar condicion ara explotar y ejecutar la exlosion, luego evaluar si debe morir, quitar corazon o no hacer nada
+    //recordar stopear timers y reinciar contadores
 }
 
 double enemy::aceleracion_angular(double theta)
@@ -217,6 +253,12 @@ QGraphicsPixmapItem *enemy::get_mov_misil()
 {
     return mov_misil;
 }
+
+void enemy::set_mov_misil()
+{
+    mov_misil->setPixmap(movimiento_misil[0]);
+}
+
 
 QPixmap *enemy::get_movimiento_misil()
 {
