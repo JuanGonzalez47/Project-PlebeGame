@@ -1,7 +1,6 @@
 # include "charac_Prota.h"
 
 #include <iostream>
-
 prota::prota(int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed), scene(_scene){
 
     sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 99,400,400);
@@ -78,18 +77,28 @@ prota::prota(unsigned int life_)
         }
     }
 
-    //for para obtener los misiles de ese avion
+    //for para obtener los misiles de ese avion y las explosiones
 
-    movimiento_misiles_avion = new QPixmap [16];
+    movimiento_misiles_avion = new QPixmap [39];
     cont = 0;
-    for (unsigned int x = 0; x < 16; x++){
+    for (unsigned int x = 0; x < 38; x++){
         if (x >= 0 && x < 8 ){
-            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,15,51,30).scaled(60,130);
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,15,51,30).scaled(130,60);
             cont++;
             if(x == 7) cont = 0;
         }
-        else {
-            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,14,51,30).scaled(60,130);
+        else if (x >= 8 && x < 16){
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,14,51,30).scaled(130,60);
+            cont++;
+            if (x == 15) cont = 0;
+        }
+        else if (x >= 16 && x < 28){
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,8,55,105).scaled(150,256);
+            cont++;
+            if (x == 27) cont = 0;
+        }
+        else{
+            movimiento_misiles_avion[x] = sprite_to_cut.set_sprite_for_animation(cont,0,9,50,111).scaled(150,256);
             cont++;
         }
     }
@@ -400,6 +409,45 @@ void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, do
 
 }
 
+void prota::seguimiento_mov(QVector2D pos_objeto, QTimer *timerMovMisil, QTimer *timerExplosion_misilAvion)
+{
+    animation_counter_8++;
+    QVector2D pos_misil(mov_misiles_avion->pos().x(), mov_misiles_avion->pos().y());
+    QVector2D direccion = pos_objeto - pos_misil;
+    direccion.normalize();
+    pos_misil += direccion*velocidad_misil_avion;
+
+
+    if (animation_counter_8 == 7) animation_counter_8 = 0;
+    mov_misiles_avion->setPixmap(movimiento_misiles_avion[animation_counter_8]);
+    mov_misiles_avion->setX(pos_misil.x());
+    mov_misiles_avion->setY(pos_misil.y());
+
+    if (distancia(pos_misil, pos_objeto) < 10) {
+        animation_counter_8 = 0;
+        mov_misiles_avion->setY(pos_objeto.y() - 100);
+        timerExplosion_misilAvion->start();
+        timerMovMisil->stop();
+    }
+}
+
+double prota::distancia(QVector2D vector1, QVector2D vector2)
+{
+    return (vector1 - vector2).length();
+
+}
+
+void prota::explosion(QTimer *timerExplosion_misilAvion, QTimer *timerEliminacionHelicopteros)
+{
+    animation_counter_7++;
+    mov_misiles_avion->setPixmap(movimiento_misiles_avion[animation_counter_7]);
+    if (animation_counter_7 == 38){
+        animation_counter_7 = 15;
+        timerExplosion_misilAvion->stop();
+        timerEliminacionHelicopteros->start();
+    }
+}
+
 
 void prota::firme(QTimer *timerFirme)
 {
@@ -412,7 +460,7 @@ void prota::firme(QTimer *timerFirme)
     }
 }
 
-void prota::avion(QTimer *timerAvion, unsigned int pos_y, QTimer *timerMisilesAvion)
+void prota::avion(unsigned int pos_y, QTimer *timerMisilesAvion)
 {
     animation_counter_6++;
     t_seno+=0.01;
@@ -424,7 +472,10 @@ void prota::avion(QTimer *timerAvion, unsigned int pos_y, QTimer *timerMisilesAv
     double new_y = y_inicial_1 + amplitud * sin(2 *M_PI * frecuencia_ *t_seno);
     mov_avion->setY(new_y);
     mov_avion->setX(mov_avion->x() + 10);
-    if (mov_avion->x() >= 150) timerMisilesAvion->start();
+    if (mov_avion->x() >= 150 && valid_put_misil){
+        timerMisilesAvion->start();
+        valid_put_misil = false;
+    }
 
 }
 

@@ -40,7 +40,7 @@ enemy::enemy(int _life)
             if (x == 19) cont = 0;
         }
         else {
-            movimiento_misil[x] = sprite_to_cut.set_sprite_for_animation(cont,y,9,50,111).scaled(150,250);
+            movimiento_misil[x] = sprite_to_cut.set_sprite_for_animation(cont,y,9,50,111).scaled(150,256);
             cont++;
         }
     }
@@ -139,7 +139,7 @@ void enemy::Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop
 
 }
 
-void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte)
+void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte, prota &walter)
 {
     animation_counter_3++;
     QVector2D pos_misil(mov_misil->pos().x(), mov_misil->pos().y());
@@ -157,10 +157,14 @@ void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTime
         animation_counter_3 = 0;
         mov_misil->setY(pos_objeto.y() - 100);
         timerExplosion->start();
-        if (muerte) timerMuerte->start();
+        walter.set_life(1);
+        if (muerte) {
+            timerMuerte->start();
+        }
         timerSeguimiento->stop();
     }
 }
+
 
 double enemy::distancia(QVector2D vector1, QVector2D vector2)
 {
