@@ -10,27 +10,38 @@ class prota : public charac {
 
 private:
 
-    QGraphicsScene *scene;
+
     sprite *sprite_prota;
-    sprite **sprite_bullet;
-    QTimer ** timer_bullets;
-    QTimer *timer;
+    QGraphicsScene *scene;
 
     int cont_bullets=0;
+    double t=0;
 
 public:
 
-    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,QGraphicsScene *_scene);
+    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,sprite *s_prota, QGraphicsScene *_scene);
 
-    void moveUpProta();
-    void moveDownProta();
-    void moveRihgtProta();
-    void moveLeftProta();
+    void moveUp();
+    void moveDown();
+    void moveRihgt();
+    void moveLeft();
+
+    void throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial,double x_inical,sprite *grenade);
 
 
-    void shootProta();
-    void deadProta();
-    void rechargeProta();
+    void shoot(QTimer *t_prota_shoot);
+
+    void dead();
+    void recharge(QTimer* t_prota_recharge);
+
+    void setCont_bullets();
+
+
+    int getCont_bullets();
+
+    int getY();
+    int getX();
+
 
 
 };

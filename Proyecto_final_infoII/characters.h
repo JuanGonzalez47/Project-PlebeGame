@@ -7,11 +7,9 @@
 
 
 
-class charac : public QObject{
+class charac{
 
 private:
-
-
     int life;
     int bullets;
     int speed;
@@ -27,12 +25,15 @@ public:
     void moveDownCharacter(sprite *move);
     void moveLeftCharacter(sprite *move);
     void moveRightCharacter(sprite *move);
-    void bullet(sprite *bullet,QGraphicsScene *scene,QTimer *timer);
+    void deadCharacter(sprite *dead_sprite, int y_image,int width_image,int n_image,QTimer *timer_dead);
 
     void setSpeed();
+    void setLife(int n);
 
-    qreal getY();
     int getSpeed();
+    int getLife();
+
+
 };
 
 
