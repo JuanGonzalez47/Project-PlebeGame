@@ -1,9 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>Sprite_prota.png</file>
-        <file>soldado_rifle.png</file>
         <file>bala_1.png</file>
         <file>sprite_prota2.png</file>
         <file>granada.png</file>
+        <file>explosion.png</file>
+        <file>bala_2.png</file>
+        <file>soldado_rifle.png</file>
+        <file>muerte-soldier.png</file>
+        <file>escenario.jpg</file>
     </qresource>
 </RCC>

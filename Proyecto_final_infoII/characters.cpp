@@ -42,7 +42,7 @@ void charac::moveDownCharacter(sprite *move){
 
 void charac::moveLeftCharacter(sprite *move){
 
-    move->moveImage(-speed,0);
+    move->moveImage(-(speed-3),0);
     move->setSprite();
 
 }
@@ -51,8 +51,19 @@ void charac::moveRightCharacter(sprite *move){
 
     move->moveImage(speed,0);
     move->setSprite();
+
 }
 
+void charac::deadCharacter(sprite *dead_sprite, int y_image, int width_image, int n_image,QTimer *timer_dead){
+
+    dead_sprite->setAttributes(y_image,width_image,n_image);
+    methodCharacter(dead_sprite);
+
+    if(dead_sprite->getCont() == n_image-1) {
+        dead_sprite->setCont(0);
+        timer_dead->stop();
+    }
+}
 
 void charac::setSpeed(){
     speed*=-1;

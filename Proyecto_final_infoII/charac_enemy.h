@@ -31,6 +31,9 @@ public:
 
     int getN_ran();
     int getMov_ran();
+
+    int getX();
+    int getY();
     sprite* getSprite_rifle();
 
 

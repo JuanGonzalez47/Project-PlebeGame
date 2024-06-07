@@ -23,17 +23,14 @@ class MainWindow : public QMainWindow
 
     QTimer *t_prota_recharge,*t_prota_dead,*t_prota_shoot;
 
-
-
-    std::vector<QTimer*> t_enemy_shoot;
-    std::vector<QTimer*> t_enemy_move;
-
     sprite *sprite_prota;
     sprite *sprite_enemy_rifle;
 
     std::vector<enemy*> enemys;
 
     std::vector<QGraphicsPixmapItem*> obstacleItems;
+
+    std::vector<int> pos_obstacles_enemys;
 
     QPixmap *obstacles;
     QPixmap obstacle1;
@@ -45,9 +42,8 @@ class MainWindow : public QMainWindow
     bool verify_coli;
 
     unsigned int cont_obstacle=0;
-    unsigned int num_obstacle=3;
-    unsigned int num_bullets=5;
-    unsigned int num_enemys=6;
+    unsigned int num_obstacle=15;
+    unsigned int num_enemys=4;
 
 
 
@@ -74,9 +70,10 @@ public:
 
 
     ~MainWindow();
-
-
     void backGround();
+
+private slots:
+    void moveView();
 
 
 private:

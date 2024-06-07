@@ -5,7 +5,7 @@ enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScen
 
 
     sprite_enemy_rifle=new sprite(":/soldado_rifle.png", 0, 110, 85, 110,_x,_y);
-    sprite_enemy_rifle->setScale(0.8);
+    sprite_enemy_rifle->setScale(0.9);
     _scene->addItem(sprite_enemy_rifle);  // Agregar el sprite a la escena
     sprite_enemy_rifle->setPos(_x,_y);
 
@@ -49,13 +49,14 @@ void enemy::shoot(QTimer *t_move, QTimer *t_enemy_shoot){
 
 
 
-    getSprite_rifle()->setAttributes(0,140,6);
+    sprite_enemy_rifle->setPos(this->getX()-40,this->getY());
+
+    sprite_enemy_rifle->setAttributes(0,140,6);
     methodCharacter(sprite_enemy_rifle);
 
     if(sprite_enemy_rifle->getCont()==5){
-        sprite_enemy_rifle->setCont(0);
         t_enemy_shoot->stop();
-        getSprite_rifle()->setCont(0);
+        sprite_enemy_rifle->setCont(0);
         t_move->start();
     }
 
@@ -96,6 +97,18 @@ int enemy::getN_ran()
 int enemy::getMov_ran()
 {
     return mov_ran;
+}
+
+int enemy::getX(){
+
+    return sprite_enemy_rifle->getx();
+
+}
+
+int enemy::getY(){
+
+    return sprite_enemy_rifle->gety();
+
 }
 
 

@@ -16,6 +16,10 @@ public:
     void setSprite();
     void setAttributes(int _sprite_y,int _width,int n_image);
     void setCont(int _cont);
+    void setN_image(int n);
+
+
+    void moveParabolic(int x_inicial,int y_inicial);
 
     int getCont();
     qreal gety();
@@ -31,7 +35,8 @@ private:
     int sprite_width;
     int sprite_height;
     int n_image=7;
-    int cont = 0;  // Inicializar la variable cont
+    int cont = 0;
+    double t=0;
 };
 
 #endif // SPRITE_H

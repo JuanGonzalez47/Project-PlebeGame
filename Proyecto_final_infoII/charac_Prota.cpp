@@ -35,35 +35,25 @@ void prota::moveLeft(){
 
 
 
-void prota::throwGrenade(QTimer *timer_grenade, double y_inicial, double x_inicial, sprite *grenade) {
+void prota::throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial, double x_inicial, sprite *grenade) {
 
-    float Voy = 50;
-    float g = 9.8;
-    float Vox = 60;
 
-    t +=0.2;
+    grenade->moveParabolic(x_inicial,y_inicial);
 
-    // Calcular nuevas posiciones
-    double new_y = y_inicial - Voy * t + (0.5 * g * t * t);
-    double new_x = x_inicial + Vox * t;
+  if (grenade->gety() > y_inicial) {
 
-    grenade->setPos(new_x, new_y);
-
-    int z=(40/t);
-
-    if(z%2!=0){
-        grenade->setSprite();
-    }
-
-    grenade->setSprite();
-
-    if (new_y > y_inicial) {
         // Detener el temporizador y eliminar la granada
+        qDebug()<<grenade->getx();
+        qDebug()<<grenade->gety();
+        grenade->setCont(0);
         timer_grenade->stop();
         scene->removeItem(grenade);
         delete grenade;
         delete timer_grenade;
+
+        timer_burst->start(50);
     }
+
 }
 
 
