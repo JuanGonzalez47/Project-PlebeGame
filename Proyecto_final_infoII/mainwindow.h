@@ -21,59 +21,33 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    QTimer *t_prota_recharge,*t_prota_dead,*t_prota_shoot;
-
-    sprite *sprite_prota;
-    sprite *sprite_enemy_rifle;
-
-    std::vector<enemy*> enemys;
-
-    std::vector<QGraphicsPixmapItem*> obstacleItems;
-
-    std::vector<int> pos_obstacles_enemys;
-
-    QPixmap *obstacles;
-    QPixmap obstacle1;
-    QPixmap obstacle2;
-
-    QPixmap obstacleCopy;
-    QGraphicsPixmapItem* obstacleItem;
-
-    bool verify_coli;
-
-    unsigned int cont_obstacle=0;
-    unsigned int num_obstacle=15;
-    unsigned int num_enemys=4;
-
-
-
-
 public:
 
     // prota
     void rechargeProta();
-    void shootProta(prota *prot);
+    void shootProta();
 
     //enemy
 
     void shootEnemy(enemy *ene,QTimer *t_move);
-    void moveAndShootEnemy(enemy *ene);
     void setEnemys();
     void moveEnemyRandom();
-
-    void mousePressEvent(QMouseEvent *event);
     void bullet();
 
     void setObstacles();
     void keyPressEvent(QKeyEvent *event);
     explicit MainWindow(QWidget *parent = nullptr);
+    void greande();
 
 
     ~MainWindow();
     void backGround();
 
 private slots:
+
     void moveView();
+    void moveAndShootEnemy(enemy *ene,int i);
+
 
 
 private:
@@ -82,6 +56,40 @@ private:
     QGraphicsView *view;
     Ui::MainWindow *ui;
     prota *marco;
+
+    QTimer *t_prota_recharge,*t_prota_dead,*t_prota_shoot,*t_prota_throw;
+
+    sprite *sprite_prota;
+    sprite *sprite_enemy_rifle;
+
+    std::vector<enemy*> enemys;
+    std::vector<QTimer*> timer_enemy_move;
+
+    std::vector<QGraphicsPixmapItem*> obstacleItems;
+
+    std::vector<int> pos_obstacles_enemys;
+    int pos_enemy=0;
+
+    bool *stop_timer_enemy;
+
+    QPixmap *obstacles;
+    QPixmap obstacle1;
+    QPixmap obstacle2;
+
+  // bool *stop_timer;
+
+    QPixmap obstacleCopy;
+    QGraphicsPixmapItem* obstacleItem;
+
+    bool verify_coli;
+
+    unsigned int cont_obstacle=0;
+    unsigned int num_obstacle=20;
+    unsigned int num_enemys=20;
+
+    bool *block_move;
+
+    int posx;
 
 };
 #endif // MAINWINDOW_H

@@ -21,7 +21,7 @@ void prota::moveDown(){
 
 }
 
-void prota::moveRihgt(){
+void prota::moveRight(){
 
     sprite_prota->setAttributes(0,43,4);
     moveRightCharacter(sprite_prota);
@@ -40,18 +40,16 @@ void prota::throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_ini
 
     grenade->moveParabolic(x_inicial,y_inicial);
 
-  if (grenade->gety() > y_inicial) {
+  if (grenade->gety()-50 > y_inicial) {
 
         // Detener el temporizador y eliminar la granada
-        qDebug()<<grenade->getx();
-        qDebug()<<grenade->gety();
         grenade->setCont(0);
         timer_grenade->stop();
         scene->removeItem(grenade);
         delete grenade;
         delete timer_grenade;
 
-        timer_burst->start(50);
+        timer_burst->start(40);
     }
 
 }
@@ -69,12 +67,7 @@ void prota::shoot(QTimer *t_prota_shoot){
     }
 }
 
-
-
-
-
-
-void prota::recharge(QTimer* t_prota_recharge){
+void prota::recharge(QTimer* t_prota_recharge, bool *block){
 
 
     sprite_prota->setAttributes(106,47,10);
@@ -82,6 +75,18 @@ void prota::recharge(QTimer* t_prota_recharge){
     if(sprite_prota->getCont()==9){
          sprite_prota->setCont(0);
         t_prota_recharge->stop();
+        *block=false;
+    }
+}
+
+void prota::launch(QTimer* t_prota_lauch,bool *block){
+
+    sprite_prota->setAttributes(200,42,7);
+    methodCharacter(sprite_prota);
+    if(sprite_prota->getCont()==6){
+        sprite_prota->setCont(0);
+        t_prota_lauch->stop();
+        *block=false;
     }
 }
 
@@ -108,9 +113,17 @@ int prota::getX()
     return sprite_prota->getx();
 }
 
-void prota::dead(){
+void prota::dead(QTimer *timer_dead, bool *block){
 
+
+    sprite_prota->setAttributes(150,53,10);
     methodCharacter(sprite_prota);
+
+    if(sprite_prota->getCont() ==9) {
+        sprite_prota->setCont(0);
+        timer_dead->stop();
+         *block=false;
+    }
 
 }
 
