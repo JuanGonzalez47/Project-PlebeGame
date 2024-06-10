@@ -23,32 +23,31 @@ class MainWindow : public QMainWindow
 
 public:
 
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+    //general
+    void backGround();
+    void setObstacles();
+    void varAux();
+    void keyPressEvent(QKeyEvent *event);
+
     // prota
+    void setProta();
     void rechargeProta();
     void shootProta();
+    void greande();
 
     //enemy
-
     void shootEnemy(enemy *ene,QTimer *t_move);
     void setEnemys();
     void moveEnemyRandom();
     void bullet();
-
-    void setObstacles();
-    void keyPressEvent(QKeyEvent *event);
-    explicit MainWindow(QWidget *parent = nullptr);
-    void greande();
-
-
-    ~MainWindow();
-    void backGround();
+    void moveAndShootEnemy(enemy *ene,int i);
 
 private slots:
 
     void moveView();
-    void moveAndShootEnemy(enemy *ene,int i);
-
-
 
 private:
 
@@ -64,32 +63,24 @@ private:
 
     std::vector<enemy*> enemys;
     std::vector<QTimer*> timer_enemy_move;
-
     std::vector<QGraphicsPixmapItem*> obstacleItems;
 
-    std::vector<int> pos_obstacles_enemys;
-    int pos_enemy=0;
-
-    bool *stop_timer_enemy;
-
-    QPixmap *obstacles;
     QPixmap obstacle1;
     QPixmap obstacle2;
 
-  // bool *stop_timer;
-
-    QPixmap obstacleCopy;
     QGraphicsPixmapItem* obstacleItem;
 
-    bool verify_coli;
-
     unsigned int cont_obstacle=0;
-    unsigned int num_obstacle=20;
-    unsigned int num_enemys=20;
+    unsigned int num_obstacle=60;
+    unsigned int num_enemys=2;
+    unsigned int bullets_initial=10;
 
+    bool verify_recharge=false;
+    bool verify_coli;
     bool *block_move;
+    bool *stop_timer_enemy;
 
-    int posx;
+
 
 };
 #endif // MAINWINDOW_H

@@ -57,8 +57,6 @@ void prota::throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_ini
 
 
 void prota::shoot(QTimer *t_prota_shoot){
-
-
     sprite_prota->setAttributes(53,64,5);
     methodCharacter(sprite_prota);
     if(sprite_prota->getCont() == 4) {
@@ -70,7 +68,7 @@ void prota::shoot(QTimer *t_prota_shoot){
 void prota::recharge(QTimer* t_prota_recharge, bool *block){
 
 
-    sprite_prota->setAttributes(106,47,10);
+    sprite_prota->setAttributes(100,47,10);
     methodCharacter(sprite_prota);
     if(sprite_prota->getCont()==9){
          sprite_prota->setCont(0);
@@ -113,7 +111,8 @@ int prota::getX()
     return sprite_prota->getx();
 }
 
-void prota::dead(QTimer *timer_dead, bool *block){
+void prota::dead(QTimer *timer_dead){
+
 
 
     sprite_prota->setAttributes(150,53,10);
@@ -122,7 +121,6 @@ void prota::dead(QTimer *timer_dead, bool *block){
     if(sprite_prota->getCont() ==9) {
         sprite_prota->setCont(0);
         timer_dead->stop();
-         *block=false;
     }
 
 }

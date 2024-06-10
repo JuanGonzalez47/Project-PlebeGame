@@ -25,6 +25,7 @@ public:
     void moveLeftEnemy();
     void shoot(QTimer *t_move, QTimer *t_enemy_shoot);
 
+
     void deadEnemy(QTimer *timer_dead);
 
     void setMovRan(int n);

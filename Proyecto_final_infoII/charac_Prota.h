@@ -28,15 +28,11 @@ public:
 
     void throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial,double x_inical,sprite *grenade);
     void launch(QTimer* t_prota_lauch,bool *block);
-
     void shoot(QTimer *t_prota_shoot);
-
-    void dead(QTimer *timer_dead,bool *block);
+    void dead(QTimer *timer_dead);
     void recharge(QTimer* t_prota_recharge, bool *block);
 
     void setCont_bullets();
-
-
     int getCont_bullets();
 
     int getY();

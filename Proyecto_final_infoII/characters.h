@@ -25,10 +25,15 @@ public:
     void moveDownCharacter(sprite *move);
     void moveLeftCharacter(sprite *move);
     void moveRightCharacter(sprite *move);
+
+
     void setSpeed();
     void setLife(int n);
+    void setBullets(int n);
+
     int getSpeed();
     int getLife();
+    int getBullets();
 
 
 };

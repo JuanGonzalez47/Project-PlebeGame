@@ -4,8 +4,8 @@
 enemy::enemy(qreal _x,qreal _y,int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed, _x,_y){
 
 
-    sprite_enemy_rifle=new sprite(":/sprite_enemy.png", 0, 110, 110, 140,_x,_y);
-    sprite_enemy_rifle->setScale(0.65);
+    sprite_enemy_rifle=new sprite(":/sprite_enemy.png", 0, 135, 110, 140,_x,_y);
+    sprite_enemy_rifle->setScale(0.6);
     scene=_scene;
     scene->addItem(sprite_enemy_rifle);  // Agregar el sprite a la escena
     sprite_enemy_rifle->setPos(_x,_y);

@@ -49,7 +49,6 @@ void sprite::moveImage(int dx, int dy) {
         x--;
     }
 
-
     setPos(x, y);
 
 }
@@ -92,7 +91,7 @@ void sprite::moveParabolic(int x_inicial, int y_inicial){
 
     float Voy = 50;
     float g = 9.8;
-    float Vox = 60;
+    float Vox = 40;
 
     t +=0.2;
 

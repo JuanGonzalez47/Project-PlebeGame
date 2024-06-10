@@ -50,16 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     backGround();
 
-    t_prota_shoot = new QTimer(this);
-    t_prota_recharge= new QTimer(this);
-    t_prota_throw=new QTimer(this);
-
-    //arreglo para parar el timer del movimiento de los enemigos
-    stop_timer_enemy=new bool[num_enemys];
-
-    block_move=new bool();
-
-    *block_move=false;
+    varAux();
 
     setObstacles();
 
@@ -67,19 +58,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     moveEnemyRandom();
 
+    setProta();
 
-    sprite_prota = new sprite(":/sprite_prota2.png", 0, 0, 43, 52, 100, 400);
-
-    sprite_prota->setScale(1.7);
-    scene->addItem(sprite_prota);  // Agregar el sprite a la escena
-    sprite_prota->setPos(100, 400);
-
-    marco = new prota(100, 400, 1000, 10, 20, sprite_prota, scene);
     moveView();
 
 }
 
 
+void MainWindow::setProta(){
+
+    sprite_prota = new sprite(":/sprite_prota2.png", 0, 0, 43, 52, 0, 400);
+
+    sprite_prota->setScale(1.4);
+    scene->addItem(sprite_prota);  // Agregar el sprite a la escena
+    sprite_prota->setPos(0, 400);
+
+    marco = new prota(0, 400, 1000, bullets_initial, 10, sprite_prota, scene);
+
+}
 
 
 
@@ -113,10 +109,11 @@ void MainWindow::setEnemys(){
     for(unsigned int i=0;i<num_enemys;i++){
 
         int posy=490;
-        int posx=numRandom(600,5500);
+        //int posx=numRandom(400,7000);
+        int posx=600;
 
         QTimer *tim_ene=new QTimer(this);
-        enemy *ene=new enemy(posx,posy,1,10,10,scene);
+        enemy *ene=new enemy(posx,posy,2,10,7,scene);
         enemys.push_back(ene);
 
         timer_enemy_move.push_back(tim_ene);
@@ -137,50 +134,108 @@ void MainWindow::moveEnemyRandom(){
 
 void MainWindow::setObstacles(){
 
-    obstacle1.load(":/obstaculo1.png");
-    // obstacle2.load(":/obstaculo2.png");
+    //primeros obstaculos
 
+    for(unsigned int i=0;i<(num_obstacle/2);i++){
 
-    // Crear una arreglo de 4 pixmaps
-    obstacles = new QPixmap[num_obstacle];
+        obstacle2.load(":/obstaculo2.png");
+        obstacleItem = new QGraphicsPixmapItem(obstacle2);
+         obstacleItem->setScale(1.7);
 
-    // Inicializar cada entrada de la matriz con obstacle1
+        int posx=numRandom(200,6500);
+        int posy;
 
-    for (unsigned int i = 0; i < num_obstacle; ++i) {
-        obstacles[i] = obstacle1;
-        obstacleItem = new QGraphicsPixmapItem(obstacles[i]);
-        // Configurar la posición y escala
-        obstacleItem->setScale(2);
+        for(unsigned int i=0;i<obstacleItems.size();i++){
 
-        int posx=numRandom(600,6500);
-        int posy=numRandom(280,700);
+            //hacer que no se sobrepongan
 
-        for(unsigned int i=0;i<pos_obstacles_enemys.size();i+=2){
-
-            if(posx<(pos_obstacles_enemys[i]+150) && posx>(pos_obstacles_enemys[i]-150)){
+            if(posx<(obstacleItems[i]->pos().x()+200) && posx>(obstacleItems[i]->pos().x()-200)){
 
                 if(numRandom(1,2)==1){
-                    posy=pos_obstacles_enemys[i+1]+150;
 
-                    if(posy>700){
-                        posy=270;
-                    }
+                    posx=obstacleItems[i]->pos().x()+300;
                 }else{
-                    posy=pos_obstacles_enemys[i+1]-150;
-                    if(posy<280){
-                        posy=690;
-                    }
+
+                    posx=obstacleItems[i]->pos().x()-300;
                 }
+
             }
 
         }
-        pos_obstacles_enemys.push_back(posx);
-        pos_obstacles_enemys.push_back(posy);
+
+        if(numRandom(1,2)==1){
+
+            posy=264;
+        }else{
+
+            posy=710;
+        }
 
         obstacleItem->setPos(posx,posy);
         scene->addItem(obstacleItem);
         obstacleItems.push_back(obstacleItem);
+
     }
+
+    //segundos obstaculos
+
+    for (unsigned int i =(num_obstacle/2); i < num_obstacle; i++) {
+
+        obstacle1.load(":/obstaculo1.png");
+        obstacleItem = new QGraphicsPixmapItem(obstacle1);
+        // Configurar la posición y escala
+        obstacleItem->setScale(1.8);
+        int posx=numRandom(200,6500);
+        int posy=numRandom(370,520);
+
+        for(unsigned int i=0;i<obstacleItems.size();i++){
+
+             //hacer que no se sobrepongan
+
+            if(posx<(obstacleItems[i]->pos().x()+200) && posx>(obstacleItems[i]->pos().x()-200)){
+
+                 if(numRandom(1,2)==1){
+
+                     posx=obstacleItems[i]->pos().x()+300;
+                 }else{
+
+                     posx=obstacleItems[i]->pos().x()-300;
+                 }
+
+            }
+
+        }
+
+        if(numRandom(1,2)==1){
+
+            posy=558;
+        }else{
+
+            posy=410;
+        }
+
+
+        obstacleItem->setPos(posx,posy);
+        scene->addItem(obstacleItem);
+        obstacleItems.push_back(obstacleItem);
+
+
+    }
+
+}
+
+void MainWindow::varAux(){
+
+    t_prota_shoot = new QTimer(this);
+    t_prota_recharge= new QTimer(this);
+    t_prota_throw=new QTimer(this);
+
+    //arreglo para parar el timer del movimiento de los enemigos
+    stop_timer_enemy=new bool[num_enemys];
+
+    block_move=new bool();
+
+    *block_move=false;
 
 }
 
@@ -199,8 +254,19 @@ void MainWindow::rechargeProta(){
 
 }
 
-void MainWindow::shootProta()
-{
+void MainWindow::shootProta(){
+
+
+    //verificar si tiene balas si no recargar
+    if(marco->getBullets()==0){
+
+        *block_move=true;
+        rechargeProta();
+
+        marco->setBullets(bullets_initial);
+    }
+
+    marco->setBullets(-1);
 
     // Temporizador para la animación del personaje disparando
     t_prota_shoot = new QTimer(this);
@@ -221,8 +287,8 @@ void MainWindow::shootProta()
     // Configura la posición y escala de la bala
     bullet->setScale(0.3);
 
-    int x_inicial=sprite_prota->getx()+100;
-    int y_inicial=sprite_prota->gety()+24;
+    int x_inicial=sprite_prota->getx()+85;
+    int y_inicial=sprite_prota->gety()+18;
 
     bullet->setPos(x_inicial,y_inicial) ;
     // Agrega la bala a la escena o al contenedor correspondiente
@@ -277,7 +343,7 @@ void MainWindow::shootProta()
                     break;
 
                     //verifiar si se pasa de los limites
-                }else if (bullet->pos().x() >7500 || (bullet->pos().x()-x_inicial)==1600) {
+                }else if (bullet->pos().x() >7500 || (bullet->pos().x()-x_inicial)>1500) {
 
                     bullet_timer->stop();
                     scene->removeItem(bullet);
@@ -316,8 +382,8 @@ void MainWindow::shootEnemy(enemy *ene,QTimer *t_move){
 
     // Configura la posición y escala de la bala
     bullet_enemy->setScale(0.3);
-    int x_inicial=ene->getSprite_rifle()->getx()-20;
-    bullet_enemy->setPos(ene->getSprite_rifle()->getx()-20, (ene->getSprite_rifle()->gety()+28));
+    int x_inicial=ene->getSprite_rifle()->getx()-25;
+    bullet_enemy->setPos(x_inicial, (ene->getSprite_rifle()->gety()+20));
 
     // Agrega la bala a la escena o al contenedor correspondiente
     scene->addItem(bullet_enemy);
@@ -348,7 +414,7 @@ void MainWindow::shootEnemy(enemy *ene,QTimer *t_move){
 
                 connect(dead_prota_timer, &QTimer::timeout, [=]() {
 
-                    marco->dead(dead_prota_timer,block_move);
+                    marco->dead(dead_prota_timer);
 
                 });
 
@@ -374,7 +440,7 @@ void MainWindow::shootEnemy(enemy *ene,QTimer *t_move){
                     break;
 
                     //verifiar si se pasa de los limites
-                }else if (bullet_enemy->pos().x() < -10 || -(bullet_enemy->pos().x()-x_inicial)==1600) {
+                }else if (bullet_enemy->pos().x() < -10 || -(bullet_enemy->pos().x()-x_inicial)>1500) {
 
                     bullet_enemy_timer->stop();
                     scene->removeItem(bullet_enemy);
@@ -411,10 +477,18 @@ void MainWindow::moveAndShootEnemy(enemy *ene,int i) {
 
         ene->moveUpEnemy();
 
-        for(unsigned int i=0;i<num_obstacle;i++){
+        for (unsigned int i = 0; i < num_obstacle; i++) {
+            if (ene->getSprite_rifle()->collidesWithItem(obstacleItems[i])) {
 
-            if(ene->getSprite_rifle()->collidesWithItem(obstacleItems[i])){
-                ene->setSpeed();
+                // Cambiar la dirección de ene
+                 ene->setSpeed();
+                // Mover ligeramente al personaje en la nueva dirección para evitar quedarse atrapado
+
+
+                 ene->moveUpEnemy();
+                 ene->moveUpEnemy();
+
+
                 break;
             }
         }
@@ -467,6 +541,7 @@ void MainWindow::moveAndShootEnemy(enemy *ene,int i) {
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
 
+
     if(!*block_move){
         t_prota_shoot->stop();
         t_prota_recharge->stop();
@@ -474,6 +549,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
         // Manejo del evento de tecla
         if (event->key() == Qt::Key_A) {
+
+                moveView();
 
             verify_coli = false;
             cont_obstacle = 0;
@@ -501,6 +578,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             }
 
         } else if (event->key() == Qt::Key_D) {
+
+                moveView();
 
             verify_coli = false;
             cont_obstacle = 0;
@@ -585,12 +664,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
             *block_move=true;
             rechargeProta();
+            marco->setBullets(bullets_initial);
+
 
         } else if (event->key() == Qt::Key_Space) {
             *block_move=true;
             greande();
 
         } else if (event->key() == Qt::Key_Return) {
+
             shootProta();
 
         } else {
@@ -620,7 +702,7 @@ void MainWindow::greande() {
 
     // Crear una nueva granada
     sprite *grenade = new sprite(":/granada.png", 0, 0, 26, 24, sprite_prota->getx() + 7, sprite_prota->gety() + 8);
-    grenade->setScale(2);
+    grenade->setScale(1.5);
     grenade->setPos(sprite_prota->getx() + 60, sprite_prota->gety() + 8);
 
     // Agregar la granada a la escena
@@ -641,13 +723,13 @@ void MainWindow::greande() {
     timer_grenade->start(50);
 
 
-    sprite *burst=new sprite(":/explosion.png", 0, 0, 55,105,x+660,y-200);
+    sprite *burst=new sprite(":/explosion.png", 0, 0, 55,105,x+390,y-200);
 
-    burst->setScale(3);
+    burst->setScale(2.5);
 
     scene->addItem(burst);
 
-    burst->setPos(sprite_prota->getx()+660,sprite_prota->gety()-200);
+    burst->setPos(sprite_prota->getx()+410,sprite_prota->gety()-170);
 
     burst->setN_image(11);
 
@@ -664,12 +746,14 @@ void MainWindow::greande() {
 
                 if(burst->collidesWithItem(enemys[i]->getSprite_rifle())){
 
+
+                    qDebug("entro");
+
                     //quitarle toda la vida al enmigo
 
                     enemys[i]->setLife(enemys[i]->getLife());
                     stop_timer_enemy[i]=true;
                     num_enemys--;
-                    break;
                 }
             }
             scene->removeItem(burst);
@@ -680,6 +764,7 @@ void MainWindow::greande() {
 
 
 }
+
 
 
 MainWindow::~MainWindow() {
@@ -701,8 +786,6 @@ MainWindow::~MainWindow() {
         delete obstacle;
     }
     obstacleItems.clear();
-
-    delete[] obstacles; // Liberar la memoria del arreglo de QPixmap
 
     delete block_move;
 

@@ -28,7 +28,7 @@ void charac::methodCharacter(sprite *method){
 
 void charac::moveUpCharacter(sprite *move){
 
-    move->moveImage(0,-speed);
+    move->moveImage(0,-(speed*1.2));
     move->setSprite();
 
 
@@ -36,7 +36,7 @@ void charac::moveUpCharacter(sprite *move){
 
 void charac::moveDownCharacter(sprite *move){
 
-    move->moveImage(0,speed);
+    move->moveImage(0,speed*1.2);
     move->setSprite();
 }
 
@@ -64,9 +64,21 @@ void charac::setLife(int n){
 
 }
 
+void charac::setBullets(int n){
+
+    bullets+=n;
+
+}
+
 int charac::getLife()
 {
     return life;
+}
+
+int charac::getBullets(){
+
+    return bullets;
+
 }
 
 int charac::getSpeed(){
@@ -74,6 +86,7 @@ int charac::getSpeed(){
     return speed;
 
 }
+
 
 
 
