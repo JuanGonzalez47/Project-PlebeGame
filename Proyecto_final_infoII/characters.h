@@ -1,10 +1,12 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
-
+#include <QTimer>
 #include "sprite.h"
-#include "QTimer"
-
+#define vida_personaje 100
+#define balas_personaje 100
+#define velocidad_personaje 30
+#define velocidad_helicoptero 10
 
 
 class charac{
@@ -19,6 +21,7 @@ private:
 public:
 
     charac(int _life,int _bullets,int _speed,qreal _x,qreal _y);
+  
     charac();
     void methodCharacter(sprite *method);
     void moveUpCharacter(sprite *move);
@@ -26,6 +29,10 @@ public:
     void moveLeftCharacter(sprite *move);
     void moveRightCharacter(sprite *move);
 
+    int get_life();
+    int get_bullets();
+    void set_life(int _life);
+    void set_bullets(int _bullets);
 
     void setSpeed();
     void setLife(int n);

@@ -11,12 +11,11 @@ charac::charac(int _life,int _bullets,int _speed,qreal _x,qreal _y){
     life=_life;
     bullets=_bullets;
     speed=_speed;
-
 }
 
-charac::charac(){
+charac::charac()
+{
     //inicializar constructor por defecto
-
 }
 
 
@@ -51,6 +50,21 @@ void charac::moveRightCharacter(sprite *move){
 
     move->moveImage(speed,0);
     move->setSprite();
+}
+
+int charac::get_life()
+{
+    return life;
+}
+
+void charac::set_life(int _life)
+{
+    life = _life;
+}
+
+void charac::set_bullets(int _bullets)
+{
+    bullets = _bullets;
 
 }
 
