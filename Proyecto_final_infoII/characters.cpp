@@ -49,6 +49,11 @@ void charac::moveRightCharacter(sprite *move){
     move->setSprite();
 }
 
+int charac::get_life()
+{
+    return life;
+}
+
 void charac::set_life(int _life)
 {
     life = _life;
