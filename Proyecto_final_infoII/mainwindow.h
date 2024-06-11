@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include "sprite.h"
 #include "characters.h"
 # include "charac_Prota.h"
@@ -11,11 +12,10 @@
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui {class MainWindow;}
 
 
 QT_END_NAMESPACE
@@ -23,6 +23,39 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+private:
+
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+    Ui::MainWindow *ui;
+    prota *marco;
+
+    QTimer *t_prota_recharge,*t_prota_dead,*t_prota_shoot,*t_prota_throw;
+
+    sprite *sprite_prota;
+    sprite *sprite_enemy_rifle;
+
+    std::vector<enemy*> enemys;
+    std::vector<QTimer*> timer_enemy_move;
+    std::vector<QGraphicsPixmapItem*> obstacleItems;
+
+    QPixmap obstacle1;
+    QPixmap obstacle2;
+
+    QGraphicsPixmapItem* obstacleItem;
+
+    unsigned int cont_obstacle=0;
+    unsigned int num_obstacle=60;
+    unsigned int num_enemys=2;
+    unsigned int bullets_initial=10;
+
+    bool verify_recharge=false;
+    bool verify_coli;
+    bool *block_move;
+    bool *stop_timer_enemy;
+
+    
     QGraphicsScene *escena_nivel_2, *pantalla_carga, *game_over, *pantalla_final;
     QPixmap *numeros, corazon;
     sprite sprite_aux;
@@ -30,9 +63,11 @@ class MainWindow : public QMainWindow
     prota walter, avion, avion_1;
     enemy nazi, nazi_1;
     QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar, *timerMisil_recto, *timerStartMisil_recto, *timerEliminacion, *timerAvion, *timerMisilesAvion, *timerMovMisil, *timerExplosion_misilAvion, *timerEliminar_helicoptero, *timerMovMisil_1, *timerExplosion_misilAvion_1, *timerEliminar_helicoptero_1, *timerPantallaFinal;
-    bool isDKeyPressed = false, helicoptero_1 = true, helicoptero_2 = true, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true, llanta_derecha = false, llanta_izquierda = false, valid_put_on_escene_misil = true, move_helicoptero = true;
+    bool isDKeyPressed = false, helicoptero_1 = true, helicoptero_2 = true, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true, llanta_derecha = false, llanta_izquierda = false, valid_put_on_escene_misil = true, move_helicoptero = true, nivel_2 = false;
     int tiempo_restante = 120, life;
     unsigned int value = 5;
+
+
 
 public:
 
@@ -91,12 +126,30 @@ public:
     void explosionMisilAvion_1();
     void Eliminar_helicoptero_1();
     void PantallaFinal();
+    
+    //general
+    void backGround();
+    void setObstacles();
+    void varAux();
+    void keyPressEvent(QKeyEvent *event);
 
-private:
+    // prota
+    void setProta();
+    void rechargeProta();
+    void shootProta();
+    void greande();
 
-    QGraphicsScene *scene;
-    Ui::MainWindow *ui;
-    prota *juan;
+    //enemy
+    void shootEnemy(enemy *ene,QTimer *t_move);
+    void setEnemys();
+    void moveEnemyRandom();
+    void bullet();
+    void moveAndShootEnemy(enemy *ene,int i);
+
+private slots:
+
+    void moveView();
+
 
 };
 #endif // MAINWINDOW_H

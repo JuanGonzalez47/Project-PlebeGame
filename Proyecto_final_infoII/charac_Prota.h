@@ -1,6 +1,10 @@
 # include "characters.h"
+
 #include <cmath>
 #include <QVector2D>
+
+#include <QTimer>
+
 
 #ifndef CHARAC_PROTA_H
 #define CHARAC_PROTA_H
@@ -19,30 +23,41 @@ class prota : public charac {
 
 private:
 
-    QGraphicsScene *scene;
+
     sprite *sprite_prota;
     QPixmap *movimiento_prota, *movimiento_avion, *movimiento_misiles_avion;
     QGraphicsPixmapItem *mov_prota, *mov_avion, *mov_misiles_avion;
     int animation_counter_1 = 0, animation_counter_2 = 6, animation_counter_3 = 13, animation_counter_4 = 25, animation_counter_5 = 13, animation_counter_6 = 0, animation_counter_7 = 15, animation_counter_8 = 0;
     double y_inicial_ = 0, x_inicial_ = 0, t = 0, t_final = 0, tiempo = 0, t_seno = 0, y_inicial_1 = 0;
     bool valid_put_misil = true;
-
+    QGraphicsScene *scene;
+    int cont_bullets=0;
+    double t=0;
 
 public:
 
-    prota(int _life,int _bullets,int _speed,QGraphicsScene *_scene);
     prota(int _life);
     prota (unsigned int life_);
     prota();
+    prota(qreal _x,qreal _y,int _life,int _bullets,int _speed,sprite *s_prota, QGraphicsScene *_scene);
 
-    void moveUpProta();
-    void moveDownProta();
-    void moveRihgtProta();
-    void moveLeftProta();
+    void moveUp();
+    void moveDown();
+    void moveRight();
+    void moveLeft();
 
-    void shootProta();
-    void deadProta();
-    void rechargeProta();
+    void throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial,double x_inical,sprite *grenade);
+    void launch(QTimer* t_prota_lauch,bool *block);
+    void shoot(QTimer *t_prota_shoot);
+    void dead(QTimer *timer_dead);
+    void recharge(QTimer* t_prota_recharge, bool *block);
+
+    void setCont_bullets();
+    int getCont_bullets();
+
+    int getY();
+    int getX();
+
 
     void mover_derecha(QGraphicsPixmapItem *llanta_2);
     void mover_izquierda(QGraphicsPixmapItem *llanta_1);

@@ -6,7 +6,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <QVector2D>
-
+#include <QTimer>
+  
 #define size_screen_w 1600
 #define size_screen_h 920
 //condiciones iniciales del pendulo
@@ -22,7 +23,12 @@
     class enemy: public charac
 {
 private:
-
+    QGraphicsScene *scene;
+    sprite *sprite_enemy_rifle;
+    int n_ran=5;
+    int mov_ran=0;
+    
+    
     QPixmap *movimiento_enemigo, *movimiento_misil;
     QGraphicsPixmapItem *mov_enemigo, *mov_misil;
     unsigned int animation_counter_1 = 0, animation_counter_2 = 0, animation_counter = 6, animation_counter_3 = 0, counter = 0, animation_counter_4 = 7, animation_counter_5 = 0, counter_1 = 0;
@@ -30,6 +36,31 @@ private:
     bool valid_move_left = false, valid_move_right = true;
 
 public:
+
+    enemy(qreal _x,qreal _y,int _life,int _bullets,int _speed, QGraphicsScene *_scene);
+
+    ~enemy();
+    void moveUpEnemy();
+    void moveDownEnemy();
+    void moveRihgtEnemy();
+    void moveLeftEnemy();
+    void shoot(QTimer *t_move, QTimer *t_enemy_shoot);
+
+
+    void deadEnemy(QTimer *timer_dead);
+
+    void setMovRan(int n);
+    void setN_ran(int _n_ran);
+    void sumMovran();
+
+    int getN_ran();
+    int getMov_ran();
+
+    int getX();
+    int getY();
+    sprite* getSprite_rifle();
+
+
 
     enemy();
     enemy(int _life);
@@ -51,5 +82,4 @@ public:
     void explosion(QTimer *timerExplosion, QTimer *timerStartMisil_recto, QTimer *timerEliminacion);
 
 };
-
 #endif // CHARAC_ENEMY_H

@@ -1,14 +1,7 @@
 # include "charac_Prota.h"
+#include <QTimer>
 
-#include <iostream>
-prota::prota(int _life, int _bullets, int _speed,QGraphicsScene *_scene) : charac (_life,_bullets,_speed), scene(_scene){
-
-    sprite_prota = new sprite(":/Sprite_prota.png", 0, 0, 110, 99,400,400);
-    scene->addItem(sprite_prota);  // Agregar el sprite a la escena
-    sprite_prota->setPos(400,400);
-
-}
-
+ 
 prota::prota(int _life)
 {
     set_life(_life);
@@ -112,44 +105,116 @@ prota::prota()
     //constructor por defecto de la clase prota
 }
 
-void prota::moveUpProta() {
+prota::prota(qreal _x,qreal _y,int _life, int _bullets, int _speed,sprite *s_prota,QGraphicsScene *_scene) : charac (_life,_bullets,_speed, _x,_y){
 
-    sprite_prota->setAttributes(0,110,9);
+    scene=_scene;
+    sprite_prota=s_prota;
+}
+
+void prota::moveUp() {
+
+    sprite_prota->setAttributes(0,43,4);
     moveUpCharacter(sprite_prota);
 }
 
-void prota::moveDownProta(){
+void prota::moveDown(){
 
-    sprite_prota->setAttributes(0,110,9);
+
+ sprite_prota->setAttributes(0,43,4);
     moveDownCharacter(sprite_prota);
 
 }
 
-void prota::moveRihgtProta(){
+void prota::moveRight(){
 
-    sprite_prota->setAttributes(0,110,9);
+    sprite_prota->setAttributes(0,43,4);
     moveRightCharacter(sprite_prota);
 }
 
-void prota::moveLeftProta(){
+void prota::moveLeft(){
 
-    sprite_prota->setAttributes(0,110,9);
+   sprite_prota->setAttributes(0,43,4);
     moveLeftCharacter(sprite_prota);
 }
 
-void prota::shootProta(){
 
-    sprite_prota->setAttributes(100,120,4);
-    methodCharacter(sprite_prota);
+
+void prota::throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial, double x_inicial, sprite *grenade) {
+
+
+    grenade->moveParabolic(x_inicial,y_inicial);
+
+  if (grenade->gety()-50 > y_inicial) {
+
+        // Detener el temporizador y eliminar la granada
+        grenade->setCont(0);
+        timer_grenade->stop();
+        scene->removeItem(grenade);
+        delete grenade;
+        delete timer_grenade;
+
+        timer_burst->start(40);
+    }
 
 }
 
-void prota::rechargeProta(){
 
-    sprite_prota->setAttributes(200,115,9);
+
+void prota::shoot(QTimer *t_prota_shoot){
+    sprite_prota->setAttributes(53,64,5);
     methodCharacter(sprite_prota);
+    if(sprite_prota->getCont() == 4) {
+        sprite_prota->setCont(0);
+        t_prota_shoot->stop();
+    }
+}
+
+void prota::recharge(QTimer* t_prota_recharge, bool *block){
+
+
+    sprite_prota->setAttributes(100,47,10);
+    methodCharacter(sprite_prota);
+    if(sprite_prota->getCont()==9){
+         sprite_prota->setCont(0);
+        t_prota_recharge->stop();
+        *block=false;
+    }
+}
+
+void prota::launch(QTimer* t_prota_lauch,bool *block){
+
+    sprite_prota->setAttributes(200,42,7);
+    methodCharacter(sprite_prota);
+    if(sprite_prota->getCont()==6){
+        sprite_prota->setCont(0);
+        t_prota_lauch->stop();
+        *block=false;
+    }
+}
+
+void prota::setCont_bullets(){
+
+    cont_bullets++;
 
 }
+
+int prota::getCont_bullets(){
+
+    return cont_bullets;
+
+}
+
+int prota::getY(){
+
+    return sprite_prota->gety();
+
+}
+
+int prota::getX()
+{
+    return sprite_prota->getx();
+}
+
 
 void prota::mover_derecha(QGraphicsPixmapItem *llanta_2)
 {
@@ -524,10 +589,17 @@ void prota::set_animation_counter_5()
 }
 
 
-void prota::deadProta(){
+void prota::dead(QTimer *timer_dead){
 
-    sprite_prota->setAttributes(300,80,14);
+
+
+    sprite_prota->setAttributes(150,53,10);
     methodCharacter(sprite_prota);
+
+    if(sprite_prota->getCont() ==9) {
+        sprite_prota->setCont(0);
+        timer_dead->stop();
+    }
 
 }
 

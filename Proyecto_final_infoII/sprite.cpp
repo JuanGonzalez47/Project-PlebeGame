@@ -1,4 +1,7 @@
 #include "sprite.h"
+# include <iostream>
+
+
 
 sprite::sprite(QString name_image, int _sprite_x, int _sprite_y, int _sprite_width, int _sprite_height,qreal _x,qreal _y) {
     spriteSheet.load(name_image);
@@ -78,14 +81,34 @@ sprite::sprite()
     setPixmap(mensaje_2);
     pantalla_final.load(":/nivel-2/Imagenes nivel 2/pantalla_final.png");
     setPixmap(pantalla_final);
+}
+
+sprite::~sprite(){
 
 }
 
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
-    x += dx;
-    y += dy;
+
+    if(y>=280 && y<=700){
+        y+= dy;
+    }else if(y<300){
+        y+=5;
+    }else{
+        y--;
+    }
+
+    if(x<=7000 && x>=-10){
+        x+= dx;
+
+    }else if(x<-10){
+        x+=5;
+    }else{
+        x--;
+    }
+
     setPos(x, y);
+
 }
 
 void sprite::setSprite() {
@@ -97,6 +120,7 @@ void sprite::setSprite() {
     if (cont == n_image) {
         cont = 0;
     }
+
 }
 
 QPixmap sprite::SetSprite(unsigned int tipo_imagen)
@@ -211,3 +235,56 @@ void sprite::setAttributes(int _sprite_y, int _width, int n){
     n_image=n;
 
 }
+
+void sprite::setCont(int _cont){
+
+    cont=_cont;
+
+}
+
+void sprite::setN_image(int n){
+
+    n_image=n;
+
+}
+
+void sprite::moveParabolic(int x_inicial, int y_inicial){
+
+    float Voy = 50;
+    float g = 9.8;
+    float Vox = 40;
+
+    t +=0.2;
+
+    // Calcular nuevas posiciones
+    double new_y = y_inicial - Voy * t + (0.5 * g * t * t);
+    double new_x = x_inicial + Vox * t;
+
+    x=new_x;
+    y=new_y;
+
+    setPos(x,y);
+    setSprite();
+
+}
+
+
+int sprite::getCont(){
+
+    return cont;
+
+}
+
+qreal sprite::gety(){
+
+    return y;
+
+}
+
+qreal sprite::getx(){
+
+    return x;
+
+}
+
+
