@@ -32,7 +32,6 @@ private:
     bool valid_put_misil = true;
     QGraphicsScene *scene;
     int cont_bullets=0;
-    double t=0;
 
 public:
 

@@ -62,8 +62,8 @@ private:
     QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *pantalla_final_, *time, *puntos, **numero_n, **corazon_n, *game_over_, *mensaje_2, **misiles_avion;
     prota walter, avion, avion_1;
     enemy nazi, nazi_1;
-    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar, *timerMisil_recto, *timerStartMisil_recto, *timerEliminacion, *timerAvion, *timerMisilesAvion, *timerMovMisil, *timerExplosion_misilAvion, *timerEliminar_helicoptero, *timerMovMisil_1, *timerExplosion_misilAvion_1, *timerEliminar_helicoptero_1, *timerPantallaFinal;
-    bool isDKeyPressed = false, helicoptero_1 = true, helicoptero_2 = true, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones, game_run = true, llanta_derecha = false, llanta_izquierda = false, valid_put_on_escene_misil = true, move_helicoptero = true, nivel_2 = false;
+    QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar, *timerMisil_recto, *timerStartMisil_recto, *timerEliminacion, *timerAvion, *timerMisilesAvion, *timerMovMisil, *timerExplosion_misilAvion, *timerEliminar_helicoptero, *timerMovMisil_1, *timerExplosion_misilAvion_1, *timerEliminar_helicoptero_1, *timerPantallaFinal, *timerNivel_2;
+    bool isDKeyPressed = false, helicoptero_1 = true, helicoptero_2 = true, isAKeyPressed = false, spacePressed = true, validKey = true, validKey_move  = true,  TeclaPressedA = true, TeclaPressedD = false, telefonoExist = true, validKey_move_ = true, valid = false, reproducir_animacion = false, reproducir_animacion_ = false, valid_rebotar = false, valid_delete = false, put_corazones = false, game_run = true, llanta_derecha = false, llanta_izquierda = false, valid_put_on_escene_misil = true, move_helicoptero = true, nivel_2 = false;
     int tiempo_restante = 120, life;
     unsigned int value = 5;
 
@@ -86,6 +86,7 @@ public:
     void set_arreglo_numeros();
     void set_corazones();
     void set_mensaje_final();
+    void stop_nivel_1();
 
 
     void keyPressEvent(QKeyEvent *event);
@@ -126,12 +127,12 @@ public:
     void explosionMisilAvion_1();
     void Eliminar_helicoptero_1();
     void PantallaFinal();
+    void nivel2();
     
     //general
     void backGround();
     void setObstacles();
     void varAux();
-    void keyPressEvent(QKeyEvent *event);
 
     // prota
     void setProta();

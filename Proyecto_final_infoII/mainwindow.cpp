@@ -77,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-  / Eliminar los enemigos
     for (enemy* ene : enemys) {
         delete ene;
     }
@@ -148,14 +147,16 @@ void MainWindow::set_mensaje()
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
-    if (event->isAutoRepeat()) return;
-    if (event->key() == Qt::Key_D) {
-        isDKeyPressed = false;
-        timerD->stop();
-    }
-    if (event->key() == Qt::Key_A) {
-        isAKeyPressed = false;
-        timerA->stop();
+    if (nivel_2){
+        if (event->isAutoRepeat()) return;
+        if (event->key() == Qt::Key_D) {
+            isDKeyPressed = false;
+            timerD->stop();
+        }
+        if (event->key() == Qt::Key_A) {
+            isAKeyPressed = false;
+            timerA->stop();
+        }
     }
 }
    
@@ -327,6 +328,8 @@ void MainWindow::varAux(){
 
     //arreglo para parar el timer del movimiento de los enemigos
     stop_timer_enemy=new bool[num_enemys];
+    block_move=new bool();
+    *block_move=false;
   
 }
 
@@ -574,6 +577,18 @@ void MainWindow::set_mensaje_final()
     paint(1100,0,0,mensaje_2,escena_nivel_2);
 }
 
+void MainWindow::stop_nivel_1()
+{
+    if (num_enemys == 0){
+        t_prota_shoot->stop();
+        t_prota_recharge->stop();
+        t_prota_throw->stop();
+        set_timers();
+        *block_move = true;
+        timerNivel_2->start();
+    }
+}
+
 void MainWindow::temporizador()
 {
     if (tiempo_restante > 0){
@@ -621,10 +636,7 @@ void MainWindow::muerte()
         walter.set_life(--life);
         set_corazones();
         timerMuerte->stop();
-=======
-    block_move=new bool();
-
-    *block_move=false;
+    }
 
 }
 
@@ -839,6 +851,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
         // Manejo del evento de tecla
         if (event->key() == Qt::Key_A) {
 
+            stop_nivel_1();
+
                 moveView();
 
             verify_coli = false;
@@ -867,6 +881,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             }
 
         } else if (event->key() == Qt::Key_D) {
+
+            stop_nivel_1();
 
                 moveView();
 
@@ -897,6 +913,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
         } else if (event->key() == Qt::Key_W) {
 
+            stop_nivel_1();
+
             verify_coli = false;
             cont_obstacle = 0;
 
@@ -923,6 +941,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             }
 
         } else if (event->key() == Qt::Key_S) {
+
+            stop_nivel_1();
 
             verify_coli = false;
             cont_obstacle = 0;
@@ -982,7 +1002,6 @@ void MainWindow::set_pantalla_carga()
     ui->graphicsView->setScene(pantalla_carga);
     pantalla_carga_ = new QGraphicsPixmapItem(sprite_aux.SetSprite(1).scaled(ui->graphicsView->width(),ui->graphicsView->height()));
     paint(0,0,0,pantalla_carga_,pantalla_carga);
-    set_timers();
     timerPantalla->start();
 }
 
@@ -1103,6 +1122,15 @@ void MainWindow::set_nivel_2()
 
 }
 
+void MainWindow::nivel2()
+{
+    //bloquear teclas de movimiento, w s (desactivar las otras)
+    validKey = false;
+    set_pantalla_carga();
+    timerNivel_2->stop();
+    nivel_2 = true;
+
+}
 
 void MainWindow::set_timers()
 {
@@ -1136,8 +1164,10 @@ void MainWindow::set_timers()
     timerExplosion_misilAvion_1 = new QTimer(this);
     timerEliminar_helicoptero_1 = new QTimer(this);
     timerPantallaFinal = new QTimer(this);
+    timerNivel_2 = new QTimer(this);
 
 
+    timerNivel_2->setInterval(500);
     timerPantallaFinal->setInterval(3000);
     timerExplosion_misilAvion_1->setInterval(16);
     timerEliminar_helicoptero_1->setInterval(1);
@@ -1156,8 +1186,7 @@ void MainWindow::set_timers()
     timerMuerte->setInterval(1);
     timerExplosion->setInterval(16);
     timerTemporizador->setInterval(1000);
-    timerPantalla->setInterval(5000);
-    timerPantalla->setInterval(5000);
+    timerPantalla->setInterval(3000);
     timerRebotar->setInterval(1);
     timerFirme->setInterval(100);
     timerSeguimiento->setInterval(25);
@@ -1170,6 +1199,7 @@ void MainWindow::set_timers()
     timerMisil_circular->setInterval(1);
 
 
+    connect(timerNivel_2, &QTimer::timeout, this, &MainWindow::nivel2);
     connect(timerPantallaFinal, &QTimer::timeout, this, &MainWindow::PantallaFinal);
     connect(timerExplosion_misilAvion_1, &QTimer::timeout, this, &MainWindow::explosionMisilAvion_1);
     connect(timerEliminar_helicoptero_1, &QTimer::timeout, this, &MainWindow::Eliminar_helicoptero_1);
@@ -1446,10 +1476,9 @@ void MainWindow::greande() {
                     qDebug("entro");
 
                     //quitarle toda la vida al enmigo
-
+                    if (enemys[i]->getLife() != 0) num_enemys--;
                     enemys[i]->setLife(enemys[i]->getLife());
                     stop_timer_enemy[i]=true;
-                    num_enemys--;
                 }
             }
             scene->removeItem(burst);
