@@ -25,13 +25,15 @@ sprite::sprite(){
 
 }
 
+sprite::~sprite(){
+
+}
+
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
 
     if(y>=280 && y<=700){
         y+= dy;
-        qDebug("y");
-        qDebug()<<y;
     }else if(y<300){
         y+=5;
     }else{
@@ -41,15 +43,11 @@ void sprite::moveImage(int dx, int dy) {
     if(x<=7000 && x>=-10){
         x+= dx;
 
-        qDebug("x");
-        qDebug()<<x;
-
     }else if(x<-10){
         x+=5;
     }else{
         x--;
     }
-
 
     setPos(x, y);
 
@@ -93,7 +91,7 @@ void sprite::moveParabolic(int x_inicial, int y_inicial){
 
     float Voy = 50;
     float g = 9.8;
-    float Vox = 60;
+    float Vox = 40;
 
     t +=0.2;
 

@@ -5,8 +5,6 @@
         <file>granada.png</file>
         <file>explosion.png</file>
         <file>bala_2.png</file>
-        <file>soldado_rifle.png</file>
-        <file>muerte-soldier.png</file>
-        <file>escenario.jpg</file>
+        <file>sprite_enemy.png</file>
     </qresource>
 </RCC>
