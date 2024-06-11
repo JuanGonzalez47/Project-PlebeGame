@@ -78,9 +78,15 @@ void charac::setLife(int n){
 
 }
 
+void charac::setBullets(unsigned int n){
+
+    bullets = n;
+
+}
+
 void charac::setBullets(int n){
 
-    bullets+=n;
+    bullets += n;
 
 }
 

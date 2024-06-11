@@ -160,12 +160,13 @@ void prota::throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_ini
 
 
 
-void prota::shoot(QTimer *t_prota_shoot){
+void prota::shoot(QTimer *t_prota_shoot,bool *block_move){
     sprite_prota->setAttributes(53,64,5);
     methodCharacter(sprite_prota);
     if(sprite_prota->getCont() == 4) {
         sprite_prota->setCont(0);
         t_prota_shoot->stop();
+        *block_move=false;
     }
 }
 

@@ -81,6 +81,8 @@ sprite::sprite()
     setPixmap(mensaje_2);
     pantalla_final.load(":/nivel-2/Imagenes nivel 2/pantalla_final.png");
     setPixmap(pantalla_final);
+    pantalla_inicio.load(":/nivel-2/Imagenes nivel 2/pantalla_inicio.png");
+    setPixmap(pantalla_inicio);
 }
 
 sprite::~sprite(){
@@ -90,7 +92,7 @@ sprite::~sprite(){
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
 
-    if(y>=280 && y<=700){
+    if(y>=280 && y<=720){
         y+= dy;
     }else if(y<300){
         y+=5;
@@ -164,6 +166,9 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
     case 20: imagen_seleccionada = pantalla_final.copy(0,0,pantalla_final.width(), pantalla_final.height());
+        return imagen_seleccionada;
+        break;
+    case 21: imagen_seleccionada = pantalla_inicio.copy(0,0,pantalla_inicio.width(), pantalla_inicio.height());
         return imagen_seleccionada;
         break;
     }

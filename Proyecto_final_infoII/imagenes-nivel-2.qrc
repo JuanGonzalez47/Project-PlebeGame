@@ -27,5 +27,6 @@
         <file>Imagenes nivel 2/misiles-amigos-mirror.png</file>
         <file>Imagenes nivel 2/mensaje_2.png</file>
         <file>Imagenes nivel 2/pantalla_final.png</file>
+        <file>Imagenes nivel 2/pantalla_inicio.png</file>
     </qresource>
 </RCC>

@@ -6,6 +6,7 @@
 #include "characters.h"
 # include "charac_Prota.h"
 #include "charac_enemy.h"
+
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
@@ -13,6 +14,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <vector>
+#include <QGraphicsProxyWidget>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {class MainWindow;}
@@ -46,9 +49,17 @@ private:
     QGraphicsPixmapItem* obstacleItem;
 
     unsigned int cont_obstacle=0;
-    unsigned int num_obstacle=60;
-    unsigned int num_enemys=2;
-    unsigned int bullets_initial=10;
+
+
+    unsigned int num_obstacle;
+    unsigned int num_enemys;
+    unsigned int bullets_initial;
+    unsigned int life_prota;
+    unsigned int speed_prota;
+    unsigned int grenades_prota;
+
+    unsigned int life_enemy;
+    unsigned int speed_enemy;
 
     bool verify_recharge=false;
     bool verify_coli;
@@ -56,10 +67,10 @@ private:
     bool *stop_timer_enemy;
 
     
-    QGraphicsScene *escena_nivel_2, *pantalla_carga, *game_over, *pantalla_final;
+    QGraphicsScene *escena_nivel_2, *pantalla_carga, *game_over, *pantalla_final, *pantalla_inicio;
     QPixmap *numeros, corazon;
     sprite sprite_aux;
-    QGraphicsPixmapItem *fondo, *llanta_1, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *pantalla_final_, *time, *puntos, **numero_n, **corazon_n, *game_over_, *mensaje_2, **misiles_avion;
+    QGraphicsPixmapItem *fondo, *llanta_1, *pantalla_inicio_, *llanta_2, *telefono, *helicoptero_enemigo, *mensaje, *pantalla_carga_, *pantalla_final_, *time, *puntos, **numero_n, **corazon_n, *game_over_, *mensaje_2, **misiles_avion;
     prota walter, avion, avion_1;
     enemy nazi, nazi_1;
     QTimer *timerD, *timerA, *timerSpace, *timerPendulo, *timerMovimientoRecto, *timerIniciarPendulo, *timerDisparo, *timerMisil_circular, *timerSeguimiento, *timerFirme, *timerRebotar, *timerPantalla, *timerTemporizador, *timerExplosion, *timerMuerte, *timerStop, *timerGameOver, *timerFinalizar, *timerMisil_recto, *timerStartMisil_recto, *timerEliminacion, *timerAvion, *timerMisilesAvion, *timerMovMisil, *timerExplosion_misilAvion, *timerEliminar_helicoptero, *timerMovMisil_1, *timerExplosion_misilAvion_1, *timerEliminar_helicoptero_1, *timerPantallaFinal, *timerNivel_2;
@@ -87,6 +98,8 @@ public:
     void set_corazones();
     void set_mensaje_final();
     void stop_nivel_1();
+    void set_nivel_1();
+    void juego();
 
 
     void keyPressEvent(QKeyEvent *event);
@@ -133,6 +146,8 @@ public:
     void backGround();
     void setObstacles();
     void varAux();
+    void addCharacteristics();
+    void stopTimers();
 
     // prota
     void setProta();

@@ -37,6 +37,7 @@ public:
     void setSpeed();
     void setLife(int n);
     void setBullets(int n);
+    void setBullets(unsigned int n);
 
     int getSpeed();
     int getLife();
