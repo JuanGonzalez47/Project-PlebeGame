@@ -121,7 +121,7 @@ void enemy::Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop
         mov_enemigo->setPixmap(movimiento_enemigo[animation_counter_2]);
         if(valid_move_left){
             mov_enemigo->setX(mov_enemigo->x()-velocidad_helicoptero);
-            if (mov_enemigo->x() <= 100){
+            if (mov_enemigo->x() <= 10){
                 if (valid)  timerMisil_recto->start();
                 valid_move_right = true;
                 valid_move_left = false;
@@ -129,7 +129,7 @@ void enemy::Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop
         }
         else if (valid_move_right){
             mov_enemigo->setX(mov_enemigo->x() + velocidad_helicoptero);
-            if (mov_enemigo->x() >= size_screen_w - 450) {
+            if (mov_enemigo->x() >= size_screen_w - 270) {
                 if (!valid) timerMisil_recto->start();
                 valid_move_left = true;
                 valid_move_right = false;
@@ -139,7 +139,7 @@ void enemy::Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop
 
 }
 
-void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte, prota &walter)
+void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte, prota &walter, bool morir)
 {
     animation_counter_3++;
     QVector2D pos_misil(mov_misil->pos().x(), mov_misil->pos().y());
@@ -157,9 +157,10 @@ void enemy::seguimiento_mov(QVector2D pos_objeto,QTimer *timerSeguimiento, QTime
         animation_counter_3 = 0;
         mov_misil->setY(pos_objeto.y() - 100);
         timerExplosion->start();
-        walter.set_life(1);
         if (muerte) {
             timerMuerte->start();
+            if (morir) walter.set_life(1);
+
         }
         timerSeguimiento->stop();
     }

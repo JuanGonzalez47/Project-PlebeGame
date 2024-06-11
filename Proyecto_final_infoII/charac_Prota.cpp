@@ -151,20 +151,22 @@ void prota::rechargeProta(){
 
 }
 
-void prota::mover_derecha()
+void prota::mover_derecha(QGraphicsPixmapItem *llanta_2)
 {
     animation_counter_1++;
     if (animation_counter_1 == 6) animation_counter_1 = 0;
     mov_prota->setPixmap(movimiento_prota[animation_counter_1]);
-    mov_prota->setX(mov_prota->x()+velocidad_personaje);
+    if (!mov_prota->collidesWithItem(llanta_2)) mov_prota->setX(mov_prota->x()+velocidad_personaje);
+
 }
 
-void prota::mover_izquierda()
+void prota::mover_izquierda(QGraphicsPixmapItem *llanta_1)
 {
     animation_counter_2++;
     if (animation_counter_2 == 13) animation_counter_2 = 7;
     mov_prota->setPixmap(movimiento_prota[animation_counter_2]);
-    mov_prota->setX(mov_prota->x()-velocidad_personaje);
+    if (!mov_prota->collidesWithItem(llanta_1)) mov_prota->setX(mov_prota->x()-velocidad_personaje);
+
 }
 
 void prota::movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar)

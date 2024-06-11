@@ -76,6 +76,8 @@ sprite::sprite()
     setPixmap(misil_2);
     mensaje_2.load(":/nivel-2/Imagenes nivel 2/mensaje_2.png");
     setPixmap(mensaje_2);
+    pantalla_final.load(":/nivel-2/Imagenes nivel 2/pantalla_final.png");
+    setPixmap(pantalla_final);
 
 }
 
@@ -135,6 +137,9 @@ QPixmap sprite::SetSprite(unsigned int tipo_imagen)
         return imagen_seleccionada;
         break;
     case 19: imagen_seleccionada = mensaje_2.copy(0,0,mensaje_2.width(), mensaje_2.height());
+        return imagen_seleccionada;
+        break;
+    case 20: imagen_seleccionada = pantalla_final.copy(0,0,pantalla_final.width(), pantalla_final.height());
         return imagen_seleccionada;
         break;
     }

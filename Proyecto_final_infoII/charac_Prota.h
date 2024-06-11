@@ -44,8 +44,8 @@ public:
     void deadProta();
     void rechargeProta();
 
-    void mover_derecha();
-    void mover_izquierda();
+    void mover_derecha(QGraphicsPixmapItem *llanta_2);
+    void mover_izquierda(QGraphicsPixmapItem *llanta_1);
     void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, QTimer *timerSpace, bool direccion, double potenciador, QTimer *timerRebotar);
     void movimiento_parabolico(double velocidad_inicial, double y_inicial, double x_inicial, bool direccion, QTimer *timerMuerte, QTimer *gameOver);
     void seguimiento_mov(QVector2D pos_objeto, QTimer *timerMovMisil, QTimer *timerExplosion);

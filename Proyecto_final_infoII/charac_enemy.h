@@ -42,7 +42,7 @@ public:
 
     void pendulo_simple(double x_inicial, double y_inicial,QTimer *timerPendulo, QTimer *timerMovimientoRecto, QTimer *timerIniciarPendulo, QTimer *timerMisil_circular);
     void Movimiento_recto(QTimer *timerMisil_recto, bool direccion, bool stop);
-    void seguimiento_mov(QVector2D pos_objeto, QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte, prota &walter);
+    void seguimiento_mov(QVector2D pos_objeto, QTimer *timerSeguimiento, QTimer *timerExplosion, QTimer *timerMuerte, bool muerte, prota &walter, bool morir);
     void animacion_preparo_disparo(QTimer *timerPendulo, QTimer *timerDisparo, QTimer *timerMisil_recto);
     void movimiento_cirular(QTimer *timerMisil_circular,double x_inicial, double y_inicial, QTimer *timerSeguimiento);
     void misil_recto(QTimer *timerExplosion, QVector2D pos_objeto, QTimer *timerMuerte, bool muerte);
