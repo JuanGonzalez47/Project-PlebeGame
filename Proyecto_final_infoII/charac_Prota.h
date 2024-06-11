@@ -47,7 +47,7 @@ public:
 
     void throwGrenade(QTimer *timer_grenade, QTimer *timer_burst,double y_inicial,double x_inical,sprite *grenade);
     void launch(QTimer* t_prota_lauch,bool *block);
-    void shoot(QTimer *t_prota_shoot);
+    void shoot(QTimer *t_prota_shoot,bool *block_move);
     void dead(QTimer *timer_dead);
     void recharge(QTimer* t_prota_recharge, bool *block);
 

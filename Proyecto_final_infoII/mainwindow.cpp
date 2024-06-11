@@ -10,6 +10,10 @@
 #include <QPixmap>
 #include <cstdlib>
 #include <random>
+#include <string>
+#include <fstream>
+
+using namespace std;
 
 
 int numRandom(int limiteInferior, int limiteSuperior) {
@@ -54,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Ajusta el tamaño del graphicsView para que sea grande en x
     ui->graphicsView->setFixedSize(1500 + 2 * ui->graphicsView->frameWidth(), 800+ 2 * ui->graphicsView->frameWidth());
 
+    addCharacteristics();
+
     backGround();
 
     varAux();
@@ -67,13 +73,6 @@ MainWindow::MainWindow(QWidget *parent)
     setProta();
 
     moveView();
-    
-    
-    if (nivel_2){ //agregar una condicion que se cumpla solo cuando pase el primer nivel
-        //bloquear teclas de movimiento, w s (desactivar las otras)
-        validKey = false;
-        set_pantalla_carga();
-    }
 }
 
 MainWindow::~MainWindow() {
@@ -169,7 +168,7 @@ void MainWindow::setProta(){
     scene->addItem(sprite_prota);  // Agregar el sprite a la escena
     sprite_prota->setPos(0, 400);
 
-    marco = new prota(0, 400, 1000, bullets_initial, 10, sprite_prota, scene);
+    marco = new prota(0, 400, life_prota, bullets_initial, speed_prota, sprite_prota, scene);
 
 }
 
@@ -204,12 +203,19 @@ void MainWindow::setEnemys(){
 
     for(unsigned int i=0;i<num_enemys;i++){
 
-        int posy=490;
-        //int posx=numRandom(400,7000);
-        int posx=600;
+        int posy;
+        int posx=numRandom(400,7000);
+
+        if(numRandom(1,3)==1){
+            posy=340;
+        }else if(numRandom(1,3)==2){
+            posy=640;
+        }else{
+            posy=496;
+        }
 
         QTimer *tim_ene=new QTimer(this);
-        enemy *ene=new enemy(posx,posy,2,10,7,scene);
+        enemy *ene=new enemy(posx,posy,life_enemy,10,speed_enemy,scene);
         enemys.push_back(ene);
 
         timer_enemy_move.push_back(tim_ene);
@@ -332,6 +338,53 @@ void MainWindow::varAux(){
     *block_move=false;
   
 }
+
+void MainWindow::addCharacteristics(){
+
+
+    // Abrir el archivo
+    ifstream file("carac1.txt");
+    string line;
+
+    // Comprobar si el archivo se abrió correctamente
+    if (!file.is_open()) {
+        qDebug()<< "Error al abrir el archivo";
+        exit(EXIT_SUCCESS);
+    }
+
+    // Leer el archivo línea por línea y asignar los valores a las variables
+    while (getline(file, line)) {
+        if (line.find("vida_prota:") != string::npos) {
+            life_prota = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("velocidad_prota:") != string::npos) {
+            speed_prota = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("balas_prota:") != string::npos) {
+            bullets_initial = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("granada_prota:") != string::npos) {
+            grenades_prota = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("vida_enemy:") != string::npos) {
+            life_enemy = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("velocidad_enemy:") != string::npos) {
+            speed_enemy = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("numero_enemy:") != string::npos) {
+            num_enemys = stoi(line.substr(line.find(":") + 1));
+        } else if (line.find("numero_obstaculos:") != string::npos) {
+            num_obstacle = stoi(line.substr(line.find(":") + 1));
+        }
+    }
+
+
+    // Cerrar el archivo
+    file.close();
+}
+
+void MainWindow::stopTimers()
+{
+    t_prota_shoot->stop();
+    t_prota_recharge->stop();
+    t_prota_throw->stop();
+}
+
 
 void MainWindow::handleDKey()
 {
@@ -580,9 +633,7 @@ void MainWindow::set_mensaje_final()
 void MainWindow::stop_nivel_1()
 {
     if (num_enemys == 0){
-        t_prota_shoot->stop();
-        t_prota_recharge->stop();
-        t_prota_throw->stop();
+        stopTimers();
         set_timers();
         *block_move = true;
         timerNivel_2->start();
@@ -660,9 +711,9 @@ void MainWindow::shootProta(){
     //verificar si tiene balas si no recargar
     if(marco->getBullets()==0){
 
+        stopTimers();
         *block_move=true;
         rechargeProta();
-
         marco->setBullets(bullets_initial);
     }
 
@@ -672,10 +723,10 @@ void MainWindow::shootProta(){
     t_prota_shoot = new QTimer(this);
 
     connect(t_prota_shoot, &QTimer::timeout, [=]() {
-        marco->shoot(t_prota_shoot);
+        marco->shoot(t_prota_shoot,block_move);
     });
 
-    t_prota_shoot->start(60);
+    t_prota_shoot->start(30);
 
     // Actualiza el contador de balas del personaje
     marco->setCont_bullets();
@@ -844,16 +895,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
   }
   else{
     if(!*block_move){
-        t_prota_shoot->stop();
-        t_prota_recharge->stop();
-        t_prota_throw->stop();
+
+          stopTimers();
 
         // Manejo del evento de tecla
         if (event->key() == Qt::Key_A) {
 
             stop_nivel_1();
-
-                moveView();
+            moveView();
 
             verify_coli = false;
             cont_obstacle = 0;
@@ -876,15 +925,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                     marco->moveLeft();
                 } else {
                     sprite_prota->setSprite();
+
+                     stopTimers();
                     marco->moveRight();
                 }
             }
 
         } else if (event->key() == Qt::Key_D) {
 
+
             stop_nivel_1();
 
-                moveView();
+            moveView();
 
             verify_coli = false;
             cont_obstacle = 0;
@@ -907,6 +959,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                     marco->moveRight();
                 } else {
                     sprite_prota->setSprite();
+                    stopTimers();
                     marco->moveLeft();
                 }
             }
@@ -936,6 +989,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                     marco->moveUp();
                 } else {
                     sprite_prota->setSprite();
+                     stopTimers();
                     marco->moveDown();
                 }
             }
@@ -965,6 +1019,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                     marco->moveDown();
                 } else {
                     sprite_prota->setSprite();
+                    stopTimers();
                     marco->moveUp();
                 }
             }
@@ -977,11 +1032,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
 
 
         } else if (event->key() == Qt::Key_Space) {
-            *block_move=true;
-            greande();
+
+            if(grenades_prota>0){
+                *block_move=true;
+                greande();
+                grenades_prota--;
+            }
 
         } else if (event->key() == Qt::Key_Return) {
 
+            *block_move=true;
             shootProta();
 
         } else {
@@ -1471,9 +1531,6 @@ void MainWindow::greande() {
             for(unsigned int i=0;i<enemys.size();i++){
 
                 if(burst->collidesWithItem(enemys[i]->getSprite_rifle())){
-
-
-                    qDebug("entro");
 
                     //quitarle toda la vida al enmigo
                     if (enemys[i]->getLife() != 0) num_enemys--;

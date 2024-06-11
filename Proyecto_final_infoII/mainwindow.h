@@ -46,9 +46,17 @@ private:
     QGraphicsPixmapItem* obstacleItem;
 
     unsigned int cont_obstacle=0;
-    unsigned int num_obstacle=60;
-    unsigned int num_enemys=2;
-    unsigned int bullets_initial=10;
+
+
+    unsigned int num_obstacle;
+    unsigned int num_enemys;
+    unsigned int bullets_initial;
+    unsigned int life_prota;
+    unsigned int speed_prota;
+    unsigned int grenades_prota;
+
+    unsigned int life_enemy;
+    unsigned int speed_enemy;
 
     bool verify_recharge=false;
     bool verify_coli;
@@ -133,6 +141,9 @@ public:
     void backGround();
     void setObstacles();
     void varAux();
+    void addCharacteristics();
+    void stopTimers();
+    void putElements();
 
     // prota
     void setProta();

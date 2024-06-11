@@ -90,7 +90,7 @@ sprite::~sprite(){
 void sprite::moveImage(int dx, int dy) {
     // Mover imagen por la escena
 
-    if(y>=280 && y<=700){
+    if(y>=280 && y<=720){
         y+= dy;
     }else if(y<300){
         y+=5;
