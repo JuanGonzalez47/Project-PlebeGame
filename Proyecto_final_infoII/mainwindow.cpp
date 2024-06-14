@@ -717,8 +717,11 @@ void MainWindow::muerte()
 //prota
 void MainWindow::rechargeProta(){
 
+
     t_prota_recharge = new QTimer(this);
     connect(t_prota_recharge, &QTimer::timeout, [=]() {
+
+       *block_move=true;
 
         marco->recharge(t_prota_recharge,block_move);
     });
@@ -731,8 +734,6 @@ void MainWindow::shootProta(){
 
 
     //verificar si tiene balas si no recargar
-    qDebug()<<marco->getBullets();
-
     if(marco->getBullets()==0){
 
         stopTimers();
