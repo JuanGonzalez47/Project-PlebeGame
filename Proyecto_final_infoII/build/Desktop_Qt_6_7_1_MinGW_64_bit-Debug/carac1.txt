@@ -1,8 +1,0 @@
-vida_prota:10
-velocidad_prota:10
-balas_prota:30
-granada_prota:5
-vida_enemy:2
-velocidad_enemy:7
-numero_enemy:30
-numero_obstaculos:60
