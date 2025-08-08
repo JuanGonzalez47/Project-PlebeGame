@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bala_1.png</file>
+        <file>sprite_prota2.png</file>
+        <file>granada.png</file>
+        <file>explosion.png</file>
+        <file>bala_2.png</file>
+        <file>sprite_enemy.png</file>
+    </qresource>
+</RCC>
